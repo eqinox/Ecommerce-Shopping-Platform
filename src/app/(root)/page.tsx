@@ -1,7 +1,14 @@
-import { Button } from "@/components/ui/button";
+import ProductList from "@/components/product/product-list";
+import { getLatetProducts } from "@/lib/actions/product.actions";
 
-const Homepage = () => {
-  return <Button>Button</Button>;
+const Homepage = async () => {
+  const latestProducts = await getLatetProducts();
+
+  return (
+    <>
+      <ProductList data={latestProducts} title="Newest Arrivals" />
+    </>
+  );
 };
 
 export default Homepage;
