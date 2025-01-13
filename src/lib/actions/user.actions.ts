@@ -41,14 +41,15 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
     const user = signUpFormSchema.parse({
       name: formData.get("name"),
       email: formData.get("email"),
-      password: formData.get("password"),
       confirmPassword: formData.get("confirmPassword"),
+      password: formData.get("password"),
     });
 
     const plainPassword = user.password;
 
     user.password = hashSync(user.password, 10);
-    console.log("last row");
+
+    console.log("before create");
     await prisma.user.create({
       data: {
         name: user.name,
@@ -56,22 +57,22 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
         password: user.password,
       },
     });
-    console.log("this is not running");
+    console.log("this is not executing");
+
     await signIn("credentials", {
       email: user.email,
       password: plainPassword,
     });
 
-    return {
-      success: true,
-      message: "User registered successfully",
-    };
+    return { success: true, message: "User created successfully" };
   } catch (error) {
-    console.log("I dont enter here", error);
-
     if (isRedirectError(error)) {
       throw error;
     }
-    return { success: false, message: formatError(error) };
+
+    return {
+      success: false,
+      message: formatError(error), // Change this line
+    };
   }
 }
