@@ -67,12 +67,7 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
 
   return existItem ? (
     <div>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleRemoveFromCart}
-        disabled={isPending}
-      >
+      <Button type="button" variant="outline" onClick={handleRemoveFromCart}>
         {isPending ? (
           <Loader className="w-4 h-4 animate-spin" />
         ) : (
@@ -80,12 +75,7 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
         )}
       </Button>
       <span className="px-2">{existItem.qty}</span>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleAddToCart}
-        disabled={isPending}
-      >
+      <Button type="button" variant="outline" onClick={handleAddToCart}>
         {isPending ? (
           <Loader className="w-4 h-4 animate-spin" />
         ) : (
