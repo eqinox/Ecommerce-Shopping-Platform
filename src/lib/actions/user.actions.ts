@@ -49,7 +49,6 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
 
     user.password = await hash(user.password);
 
-    console.log("before create");
     await prisma.user.create({
       data: {
         name: user.name,
@@ -57,7 +56,6 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
         password: user.password,
       },
     });
-    console.log("this is not executing");
 
     await signIn("credentials", {
       email: user.email,
@@ -75,4 +73,13 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
       message: formatError(error), // Change this line
     };
   }
+}
+
+export async function getUserById(userId: string) {
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!user) throw new Error("User not found");
+  return user;
 }
