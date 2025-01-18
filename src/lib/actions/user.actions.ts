@@ -94,7 +94,7 @@ export async function getUserById(userId: string) {
 // Update the user's address
 export async function updateUserAddress(data: ShippingAddress) {
   try {
-    const session = auth();
+    const session = await auth();
 
     const currentUser = await prisma.user.findFirst({
       where: { id: session?.user?.id },
@@ -138,6 +138,34 @@ export async function updateUserPaymentMethod(
     await prisma.user.update({
       where: { id: currentUser.id },
       data: { paymentMethod: paymentMethod.type },
+    });
+
+    return {
+      success: true,
+      message: "User updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
+
+// Update the user profile
+export async function updateProfile(user: { name: string; email: string }) {
+  try {
+    const session = await auth();
+
+    const currentUser = await prisma.user.findFirst({
+      where: { id: session?.user?.id },
+    });
+
+    if (!currentUser) throw new Error("User not found");
+
+    await prisma.user.update({
+      where: { id: currentUser.id },
+      data: { name: user.name },
     });
 
     return {
