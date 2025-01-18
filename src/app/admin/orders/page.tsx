@@ -1,4 +1,7 @@
+import { auth } from "@/auth";
+import DeleteDialog from "@/components/shared/delete-dialog";
 import Pagination from "@/components/shared/pagination";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,23 +10,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getMyOrders } from "@/lib/actions/order.actions";
+import { deleteOrder, getAllOrders } from "@/lib/actions/order.actions";
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "My Orders",
+  title: "Admin Orders",
 };
 
 interface Props {
   searchParams: Promise<{ page: string }>;
 }
 
-const OrdersPage: React.FC<Props> = async (props) => {
-  const { page } = await props.searchParams;
+const AdminOrdersPage: React.FC<Props> = async (props) => {
+  const { page = "1" } = await props.searchParams;
 
-  const orders = await getMyOrders({ page: Number(page) || 1 });
+  const session = await auth();
+
+  if (session?.user.role !== "admin") throw new Error("User is not authorized");
+
+  const orders = await getAllOrders({
+    page: Number(page),
+  });
 
   return (
     <div className="space-y-2">
@@ -59,9 +68,10 @@ const OrdersPage: React.FC<Props> = async (props) => {
                     : "Not Delivered"}
                 </TableCell>
                 <TableCell>
-                  <Link href={`/order/${order.id}`}>
-                    <span className="px-2">Details</span>
-                  </Link>
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/order/${order.id}`}>Details</Link>
+                  </Button>
+                  <DeleteDialog id={order.id} action={deleteOrder} />
                 </TableCell>
               </TableRow>
             ))}
@@ -75,4 +85,4 @@ const OrdersPage: React.FC<Props> = async (props) => {
   );
 };
 
-export default OrdersPage;
+export default AdminOrdersPage;
