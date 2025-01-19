@@ -270,7 +270,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel>is Deatured?</FormLabel>
+                    <FormLabel>is Featured?</FormLabel>
                   </FormItem>
                 )}
               />
