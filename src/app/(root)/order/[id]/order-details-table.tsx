@@ -28,17 +28,20 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import StripePayment from "./stripe-payment";
 
 interface Props {
   order: Order;
   paypalClientId: string;
   isAdmin: boolean;
+  stripeClientSecret: string | null;
 }
 
 const OrderDetailsTable: React.FC<Props> = ({
   order,
   paypalClientId,
   isAdmin,
+  stripeClientSecret,
 }) => {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
@@ -241,6 +244,16 @@ const OrderDetailsTable: React.FC<Props> = ({
                 </PayPalScriptProvider>
               </div>
             )}
+
+            {/* Stripe Payment */}
+            {!isPaid && paymentMethod === "Stripe" && stripeClientSecret && (
+              <StripePayment
+                priceInCents={Number(order.totalPrice) * 100}
+                orderId={order.id}
+                clientSecret={stripeClientSecret}
+              />
+            )}
+
             {/* Cash On Delivery */}
             {isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (
               <MarkAsPaidButton />
