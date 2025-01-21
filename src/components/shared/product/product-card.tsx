@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "../../ui/card";
 import ProductPrice from "./product-price";
 import { Product } from "@/types";
+import Rating from "./rating";
 
 interface ProductCardProps {
   product: Product;
@@ -29,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <h2 className="text-sm font-medium">{product.name}</h2>
         </Link>
         <div className="flex-between gap-4">
-          <p>{product.rating} Stars</p>
+          <Rating value={Number(product.rating)} />
           {product.stock > 0 ? (
             <ProductPrice value={Number(product.price)} />
           ) : (
