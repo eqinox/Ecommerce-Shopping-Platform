@@ -1,17 +1,9 @@
 import NextAuth from "next-auth";
-// NOTE: only import the needed modules from Prisma, i.e. we don't need
-// Products, Orders, Reviews etc. in our auth middleware
-import {
-  user as prismaUser,
-  cart as prismaCart,
-  authAdapter,
-} from "@/db/prisma";
-import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextAuthConfig } from "next-auth";
-import { NextResponse } from "next/server";
-
-import { compare } from "./lib/encrypt";
+import { authConfig } from "./auth.config";
+import { prisma } from "@/db/prisma";
 import { cookies } from "next/headers";
+import { compare } from "./lib/encrypt";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const config = {
   pages: {
@@ -19,10 +11,9 @@ export const config = {
     error: "/sign-in",
   },
   session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    strategy: "jwt" as const,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  adapter: authAdapter,
   providers: [
     CredentialsProvider({
       credentials: {
@@ -30,12 +21,10 @@ export const config = {
         password: { type: "password" },
       },
       async authorize(credentials) {
-        if (credentials == null) {
-          return null;
-        }
+        if (credentials == null) return null;
 
         // Find user in database
-        const user = await prismaUser.findFirst({
+        const user = await prisma.user.findFirst({
           where: {
             email: credentials.email as string,
           },
@@ -64,12 +53,10 @@ export const config = {
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     // eslint-disable-next-line
     async session({ session, user, trigger, token }: any) {
-      if (!session.user) {
-        return session;
-      }
-
+      // Set the user ID from the token
       session.user.id = token.sub;
       session.user.role = token.role;
       session.user.name = token.name;
@@ -93,7 +80,7 @@ export const config = {
           token.name = user.email!.split("@")[0];
 
           // Update database to reflect the token name
-          await prismaUser.update({
+          await prisma.user.update({
             where: { id: user.id },
             data: { name: token.name },
           });
@@ -104,18 +91,18 @@ export const config = {
           const sessionCartId = cookiesObject.get("sessionCartId")?.value;
 
           if (sessionCartId) {
-            const sessionCart = await prismaCart.findFirst({
+            const sessionCart = await prisma.cart.findFirst({
               where: { sessionCartId },
             });
 
             if (sessionCart) {
               // Delete current user cart
-              await prismaCart.deleteMany({
+              await prisma.cart.deleteMany({
                 where: { userId: user.id },
               });
 
               // Assign new cart
-              await prismaCart.update({
+              await prisma.cart.update({
                 where: { id: sessionCart.id },
                 data: { userId: user.id },
               });
@@ -131,49 +118,7 @@ export const config = {
 
       return token;
     },
-    // eslint-disable-next-line
-    authorized({ request, auth }: any) {
-      // Array of regex patterns of paths we want to protect
-      const protectedPaths = [
-        /\/shipping-address/,
-        /\/payment-method/,
-        /\/place-order/,
-        /\/profile/,
-        /\/user\/(.*)/,
-        /\/order\/(.*)/,
-        /\/admin/,
-      ];
-
-      // Get pathname from the req URL object
-      const { pathname } = request.nextUrl;
-
-      // Check if user is not authenticated and accessing a protected path
-      if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
-
-      // Check for session cart cookie
-      if (!request.cookies.get("sessionCartId")) {
-        // Generate new session cart id cookie
-        const sessionCartId = crypto.randomUUID();
-
-        // Clone the req headers
-        const newRequestHeaders = new Headers(request.headers);
-
-        // Create new response and add the new headers
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        });
-
-        // Set newly generated sessionCartId in the response cookies
-        response.cookies.set("sessionCartId", sessionCartId);
-
-        return response;
-      } else {
-        return true;
-      }
-    },
   },
-} satisfies NextAuthConfig;
+};
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
