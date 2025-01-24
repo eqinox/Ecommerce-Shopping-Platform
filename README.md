@@ -1,5 +1,7 @@
 # Next.js App
 
+**Demo: [https://ecommerce-shopping-platform.vercel.app/](https://ecommerce-shopping-platform.vercel.app/)**
+
 ## Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/)
@@ -10,6 +12,7 @@
 
 ## Features
 
+- Marketing landing page (`/`) with latest products
 - Search page with all products (`/search`) which leads to Stripe Checkout
 - Admin dashboard with CRUD operations on products
 - RBAC with Admin and User roles
