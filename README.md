@@ -13,9 +13,14 @@
 ## Features
 
 - Marketing landing page (`/`) with latest products
-- Search page with all products (`/search`) which leads to Stripe Checkout
-- Admin dashboard with CRUD operations on products
+- Search page with sort and filter for all products (`/search`)
+- Cart page which lead to Stripe Checkout, Paypal Checkout or Cash on Delivery
+- Admin dashboard (`/admin/`) with overview for all products, CRUD operations on products, orders and users
+- Order history page
+- User profile page
 - RBAC with Admin and User roles
+- Theme changing
+- Notification by email when product is purchased
 - Email/password authentication with JWTs stored to cookies
 
 After changes in `schema.prisma` file must run
@@ -58,10 +63,9 @@ In your Vercel project settings (or during deployment), add all the necessary en
 6. `NEXTAUTH_SECRET`: Set this to a random string. `openssl rand -base64 32` will generate one.
 7. `NEXTAUTH_URL`: Set this to localhost or change it to the production url in step 1.
 8. `NEXTAUTH_URL_INTERNAL`: Set this to the same as step 7
-9. `ENCRYPTION_KEY`: Set this to a random string. `openssl rand -base64 32` will generate one.
-10. `PAYPAL_CLIENT_ID`: Paypal public key
-11. `PAYPAL_APP_SECRET`: Paypal secret
-12. `UPLOADTHING_TOKEN`: Uploadthing token
-13. `UPLOADTHING_SECRET`: Uploadthing secret
-14. `UPLOADTHING_APPID`: Uploadthing app id
-15. `RESEND_API_KEY`: the key from resend for sending mails
+9. `PAYPAL_CLIENT_ID`: Paypal public key
+10. `PAYPAL_APP_SECRET`: Paypal secret
+11. `UPLOADTHING_TOKEN`: Uploadthing token
+12. `UPLOADTHING_SECRET`: Uploadthing secret
+13. `UPLOADTHING_APPID`: Uploadthing app id
+14. `RESEND_API_KEY`: the key from resend for sending mails
