@@ -5,10 +5,10 @@
 ## Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: [Postgres](https://www.postgresql.org/) [(Neon.tech via Vercel)](https://neon.tech/)
+- **Database**: [Postgres](https://www.postgresql.org/) specifically [(Neon.tech via Vercel)](https://neon.tech/)
 - **ORM**: [Prisma](https://www.prisma.io/)
-- **Payments**: [Stripe](https://stripe.com/) [Paypal](https://www.paypal.com/)
-- **Authentication** [NextAuth.js](https://next-auth.js.org/) [Auth.js](https://authjs.dev/)
+- **Payments**: [Stripe](https://stripe.com/) and [Paypal](https://www.paypal.com/)
+- **Authentication** [NextAuth.js](https://next-auth.js.org/) and [Auth.js](https://authjs.dev/)
 - **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
 
 ## Features
