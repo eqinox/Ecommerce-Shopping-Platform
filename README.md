@@ -5,9 +5,10 @@
 ## Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: [Postgres](https://www.postgresql.org/)
+- **Database**: [Postgres](https://www.postgresql.org/) [(Neon.tech via Vercel)](https://neon.tech/)
 - **ORM**: [Prisma](https://www.prisma.io/)
-- **Payments**: [Stripe](https://stripe.com/)
+- **Payments**: [Stripe](https://stripe.com/) [Paypal](https://www.paypal.com/)
+- **Authentication** [NextAuth.js](https://next-auth.js.org/) [Auth.js](https://authjs.dev/)
 - **UI Library**: [shadcn/ui](https://ui.shadcn.com/)
 
 ## Features
@@ -22,6 +23,8 @@
 - Theme changing
 - Notification by email when product is purchased
 - Email/password authentication with JWTs stored to cookies
+
+- The project uses **PostgreSQL**, hosted on **Neon.tech**, with seamless integration through **Vercel's managed database functionality**. This setup provides a scalable and serverless PostgreSQL experience optimized for modern applications.
 
 After changes in `schema.prisma` file must run
 
