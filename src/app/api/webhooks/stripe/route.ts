@@ -5,36 +5,79 @@ import { updateOrderToPaid } from "@/lib/actions/order.actions";
 // Initialize Stripe with the secret API key from environment variables
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-// Define the POST handler function for the Stripe webhook
-export async function POST(req: NextRequest) {
-  // Construct the event using the raw request body, the Stripe signature header, and the webhook secret.
-  // This ensures that the request is indeed from Stripe and has not been tampered with.
-  const event = await stripe.webhooks.constructEvent(
-    await req.text(),
-    req.headers.get("stripe-signature") as string,
-    process.env.STRIPE_WEBHOOK_SECRET as string
-  );
-  // charge.succeeded indicates a successful payment
-  if (event.type === "charge.succeeded") {
-    // Retrieve the order ID from the payment metadata
-    const { object } = event.data;
+// LOGGING FUNCTION
+// eslint-disable-next-line
+async function logWebhookEvent(event: any) {
+  console.log("Received Webhook Event:", JSON.stringify(event, null, 2));
 
-    // Update the order status to paid
-    await updateOrderToPaid({
-      orderId: object.metadata.orderId,
-      paymentResult: {
+  // If you have a logging service or database, log it there too
+  // Example: Save to a file or database for debugging
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    // Log headers and body
+    console.log("Headers:", JSON.stringify(req.headers));
+    console.log("Raw body:", await req.text());
+
+    // Construct the Stripe event
+    const event = await stripe.webhooks.constructEvent(
+      await req.text(),
+      req.headers.get("stripe-signature") as string,
+      process.env.STRIPE_WEBHOOK_SECRET as string
+    );
+
+    // Log the received event
+    await logWebhookEvent(event);
+
+    // Process the event
+    if (event.type === "charge.succeeded") {
+      console.log("charge.succeeded event detected");
+
+      // Retrieve the order ID from metadata
+      const { object } = event.data;
+
+      console.log("Order ID:", object.metadata.orderId);
+      console.log("Payment details:", {
         id: object.id,
         status: "COMPLETED",
-        email_address: object.billing_details.email!,
+        email: object.billing_details.email,
         pricePaid: (object.amount / 100).toFixed(),
-      },
-    });
+      });
 
+      // CALL THE UPDATE FUNCTION
+      try {
+        await updateOrderToPaid({
+          orderId: object.metadata.orderId,
+          paymentResult: {
+            id: object.id,
+            status: "COMPLETED",
+            email_address: object.billing_details.email!,
+            pricePaid: (object.amount / 100).toFixed(),
+          },
+        });
+        console.log("updateOrderToPaid executed successfully.");
+      } catch (error) {
+        console.error("Error in updateOrderToPaid function:", error);
+      }
+
+      return NextResponse.json({
+        message: "updateOrderToPaid was successful",
+      });
+    }
+
+    console.log("Event is not charge.succeeded");
     return NextResponse.json({
-      message: "updateOrderToPaid was successful",
+      message: "Event received but not processed",
     });
+  } catch (
+    // eslint-disable-next-line
+    error: any
+  ) {
+    console.error("Error handling Stripe webhook:", error.message);
+    return NextResponse.json(
+      { error: "Webhook processing error" },
+      { status: 400 }
+    );
   }
-  return NextResponse.json({
-    message: "event is not charge.succeeded",
-  });
 }
