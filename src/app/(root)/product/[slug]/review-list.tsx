@@ -45,7 +45,7 @@ const ReviewList = ({
       const res = await getReviews({ productId });
       setReviews([...res.data]);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast({
         variant: "destructive",
         description: "Error in fetching reviews",
