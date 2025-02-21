@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { updateOrderToPaid } from "@/lib/actions/order.actions";
 
 // Initialize Stripe with the secret API key from environment variables
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_WEBHOOK_SECRET as string);
 
 // LOGGING FUNCTION
 // eslint-disable-next-line
