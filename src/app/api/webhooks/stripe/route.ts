@@ -2,20 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { updateOrderToPaid } from "@/lib/actions/order.actions";
 
-// LOGGING FUNCTION
-// eslint-disable-next-line
-async function logWebhookEvent(event: any) {
-  console.log("Received Webhook Event:", JSON.stringify(event, null, 2));
-
-  // If you have a logging service or database, log it there too
-  // Example: Save to a file or database for debugging
-}
-
 export async function POST(req: NextRequest) {
   try {
     // Log headers and body
-    console.log("Headers:", JSON.stringify(req.headers));
-    console.log("Raw body:", await req.text());
+    // console.log("Headers:", JSON.stringify(req.headers));
+    // console.log("Raw body:", await req.text());
 
     // Construct the Stripe event
     const event = await Stripe.webhooks.constructEvent(
@@ -25,7 +16,6 @@ export async function POST(req: NextRequest) {
     );
 
     // Log the received event
-    await logWebhookEvent(event);
 
     // Process the event
     if (event.type === "charge.succeeded") {
@@ -34,13 +24,13 @@ export async function POST(req: NextRequest) {
       // Retrieve the order ID from metadata
       const { object } = event.data;
 
-      console.log("Order ID:", object.metadata.orderId);
-      console.log("Payment details:", {
-        id: object.id,
-        status: "COMPLETED",
-        email: object.billing_details.email,
-        pricePaid: (object.amount / 100).toFixed(),
-      });
+      // console.log("Order ID:", object.metadata.orderId);
+      // console.log("Payment details:", {
+      //   id: object.id,
+      //   status: "COMPLETED",
+      //   email: object.billing_details.email,
+      //   pricePaid: (object.amount / 100).toFixed(),
+      // });
 
       // CALL THE UPDATE FUNCTION
       try {
