@@ -2,9 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { updateOrderToPaid } from "@/lib/actions/order.actions";
 
-// Initialize Stripe with the secret API key from environment variables
-const stripe = new Stripe(process.env.STRIPE_WEBHOOK_SECRET as string);
-
 // LOGGING FUNCTION
 // eslint-disable-next-line
 async function logWebhookEvent(event: any) {
@@ -21,7 +18,7 @@ export async function POST(req: NextRequest) {
     console.log("Raw body:", await req.text());
 
     // Construct the Stripe event
-    const event = await stripe.webhooks.constructEvent(
+    const event = await Stripe.webhooks.constructEvent(
       await req.text(),
       req.headers.get("stripe-signature") as string,
       process.env.STRIPE_WEBHOOK_SECRET as string
