@@ -30,7 +30,7 @@ const sampleData = {
       rating: 4.5,
       numReviews: 10,
       stock: 5,
-      isFeatured: true,
+      isFeatured: false,
       banner: "banner-1.jpg",
     },
     {
@@ -47,7 +47,7 @@ const sampleData = {
       rating: 4.2,
       numReviews: 8,
       stock: 10,
-      isFeatured: true,
+      isFeatured: false,
       banner: "banner-2.jpg",
     },
     {
@@ -115,7 +115,7 @@ const sampleData = {
       rating: 4.6,
       numReviews: 12,
       stock: 8,
-      isFeatured: true,
+      isFeatured: false,
       banner: null,
     },
   ],

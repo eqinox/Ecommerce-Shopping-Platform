@@ -95,10 +95,10 @@ const StripePayment = ({
             theme === "dark"
               ? "night"
               : theme === "light"
-              ? "stripe"
-              : systemTheme === "light"
-              ? "stripe"
-              : "night",
+                ? "stripe"
+                : systemTheme === "light"
+                  ? "stripe"
+                  : "night",
         },
       }}
       stripe={stripePromise}

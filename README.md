@@ -48,7 +48,7 @@ Prisma comes with a built-in studio that we can use to view our database
 npx prisma studio
 ```
 
-Generate users and products if databae is empty
+Delete everything from db and generate users and products
 
 ```bash
 npx tsx ./src/db/seed

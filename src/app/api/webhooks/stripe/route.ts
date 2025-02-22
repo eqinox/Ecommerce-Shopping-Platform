@@ -4,10 +4,6 @@ import { updateOrderToPaid } from "@/lib/actions/order.actions";
 
 export async function POST(req: NextRequest) {
   try {
-    // Log headers and body
-    // console.log("Headers:", JSON.stringify(req.headers));
-    // console.log("Raw body:", await req.text());
-
     // Construct the Stripe event
     const event = await Stripe.webhooks.constructEvent(
       await req.text(),
@@ -15,22 +11,10 @@ export async function POST(req: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
-    // Log the received event
-
     // Process the event
     if (event.type === "charge.succeeded") {
-      console.log("charge.succeeded event detected");
-
       // Retrieve the order ID from metadata
       const { object } = event.data;
-
-      // console.log("Order ID:", object.metadata.orderId);
-      // console.log("Payment details:", {
-      //   id: object.id,
-      //   status: "COMPLETED",
-      //   email: object.billing_details.email,
-      //   pricePaid: (object.amount / 100).toFixed(),
-      // });
 
       // CALL THE UPDATE FUNCTION
       try {
@@ -43,7 +27,6 @@ export async function POST(req: NextRequest) {
             pricePaid: (object.amount / 100).toFixed(),
           },
         });
-        console.log("updateOrderToPaid executed successfully.");
       } catch (error) {
         console.error("Error in updateOrderToPaid function:", error);
       }
@@ -53,7 +36,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    console.log("Event is not charge.succeeded");
     return NextResponse.json({
       message: "Event received but not processed",
     });
