@@ -12,7 +12,7 @@ import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
 import { Prisma } from "@prisma/client";
-import { sendPurchaseReceipt } from "@/email";
+import { sendPurchaseReceipt, sendShippingReceipt } from "@/email";
 
 // Create order and create the order items
 export async function createOrder() {
@@ -445,6 +445,25 @@ export async function deliverOrder(orderId: string) {
       data: {
         isDelivered: true,
         deliveredAt: new Date(),
+      },
+    });
+
+    // Get updated order after transaction
+    const updatedOrder = await prisma.order.findFirst({
+      where: { id: orderId },
+      include: {
+        orderitems: true,
+        user: { select: { name: true, email: true } },
+      },
+    });
+
+    if (!updatedOrder) throw new Error("Order not found");
+
+    sendShippingReceipt({
+      order: {
+        ...updatedOrder,
+        shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+        paymentResult: updatedOrder.paymentResult as PaymentResult,
       },
     });
 
