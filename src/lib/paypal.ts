@@ -16,7 +16,10 @@ export const paypal = {
         intent: "CAPTURE",
         purchase_units: [
           {
-            amount: { currency_code: "USD", value: price },
+            amount: {
+              currency_code: "USD",
+              value: price,
+            },
           },
         ],
       }),

@@ -8,16 +8,16 @@ import { prisma } from "@/db/prisma";
 import { cartItemSchema, insertCartSchema } from "../validators";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 // Calculate cart prices
-const calcPrice = (items: CartItem[]) => {
+const calcPrice = (items: z.infer<typeof cartItemSchema>[]) => {
   const itemsPrice = round2(
-    items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
-  );
-  const shippingPrice = round2(itemsPrice > 100 ? 0 : 10);
-  const taxPrice = round2(0.15 * itemsPrice);
-  const totalPrice = round2(itemsPrice + taxPrice + shippingPrice);
-
+      items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
+    ),
+    shippingPrice = round2(itemsPrice > 100 ? 0 : 10),
+    taxPrice = round2(0.15 * itemsPrice),
+    totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
   return {
     itemsPrice: itemsPrice.toFixed(2),
     shippingPrice: shippingPrice.toFixed(2),
