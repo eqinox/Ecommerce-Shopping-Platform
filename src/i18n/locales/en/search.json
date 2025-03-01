@@ -1,0 +1,24 @@
+{
+  "department": "Department",
+  "any": "Any",
+  "all": "All",
+  "customerReview": "Customer Review",
+  "prices": {
+    "1": "1 lv до 50 lv",
+    "2": "51 lv до 100 lv",
+    "3": "101 lv до 200 lv",
+    "4": "201 lv до 500 lv",
+    "5": "501 lv до 1000 lv"
+  },
+  "starsAndUp": "Stars & up",
+  "clear": "Clear",
+  "sortBy": "Sort by",
+  "sort": {
+    "newest": "newest",
+    "lowest": "lowest",
+    "highest": "highest",
+    "rating": "rating"
+  },
+  "search": "Search",
+  "category": "Category"
+}

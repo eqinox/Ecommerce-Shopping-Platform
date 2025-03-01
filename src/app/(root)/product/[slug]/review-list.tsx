@@ -16,6 +16,7 @@ import Link from "next/link";
 import ReviewForm from "./review-form";
 import { getReviews } from "@/lib/actions/review.actions";
 import Rating from "@/components/shared/product/rating";
+import { Trans, useTranslation } from "react-i18next";
 
 const ReviewList = ({
   userId,
@@ -26,6 +27,7 @@ const ReviewList = ({
   productId: string;
   productSlug: string;
 }) => {
+  const { t } = useTranslation("product");
   const [reviews, setReviews] = useState<Review[]>([]);
   const { toast } = useToast();
 
@@ -55,7 +57,7 @@ const ReviewList = ({
 
   return (
     <div className="space-y-4">
-      {reviews.length === 0 && <div>No reviews yet</div>}
+      {reviews.length === 0 && <div>{t("noReviews")}</div>}
       {userId ? (
         <ReviewForm
           userId={userId}
@@ -64,14 +66,17 @@ const ReviewList = ({
         />
       ) : (
         <div>
-          Please{" "}
-          <Link
-            className="text-primary px-2"
-            href={`/api/auth/signin?callbackUrl=/product/${productSlug}`}
-          >
-            sign in
-          </Link>{" "}
-          to write a review
+          <Trans
+            i18nKey="please_sign_in_to_review"
+            components={{
+              1: (
+                <Link
+                  className="text-primary px-2"
+                  href={`/api/auth/signin?callbackUrl=/product/${productSlug}`}
+                />
+              ),
+            }}
+          />
         </div>
       )}
       <div className="flex flex-col gap-3">

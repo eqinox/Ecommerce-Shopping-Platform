@@ -21,12 +21,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Loader } from "lucide-react";
 import { updateUserAddress } from "@/lib/actions/user.actions";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   address: ShippingAddress;
 }
 
 const ShippingAddressForm: React.FC<Props> = ({ address }) => {
+  const { t } = useTranslation();
+  const { t: shippingAddressT } = useTranslation("form");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -58,9 +61,9 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
   return (
     <div>
       <div className="max-w-md mx-auto space-y-4">
-        <h1 className="h2-bold mt-4">Shipping Address</h1>
+        <h1 className="h2-bold mt-4">{t("shippingAddress")}</h1>
         <p className="text-sm text-muted-foreground">
-          Please enter and address to ship to
+          {shippingAddressT("addressForShip")}
         </p>
         <Form {...form}>
           <form
@@ -81,9 +84,12 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
                   >;
                 }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel>{shippingAddressT("fullName")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter full name" {...field} />
+                      <Input
+                        placeholder={shippingAddressT("enterFullName")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,9 +110,12 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
                   >;
                 }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel>{shippingAddressT("address")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter address" {...field} />
+                      <Input
+                        placeholder={shippingAddressT("enterAddress")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -127,9 +136,12 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
                   >;
                 }) => (
                   <FormItem className="w-full">
-                    <FormLabel>City</FormLabel>
+                    <FormLabel>{shippingAddressT("city")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter city" {...field} />
+                      <Input
+                        placeholder={shippingAddressT("enterCity")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,9 +162,12 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
                   >;
                 }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Postal Code</FormLabel>
+                    <FormLabel>{shippingAddressT("postalCode")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter postal code" {...field} />
+                      <Input
+                        placeholder={shippingAddressT("enterPostalCode")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -173,9 +188,12 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
                   >;
                 }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel>{shippingAddressT("country")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter country" {...field} />
+                      <Input
+                        placeholder={shippingAddressT("enterCountry")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -190,7 +208,7 @@ const ShippingAddressForm: React.FC<Props> = ({ address }) => {
                 ) : (
                   <ArrowRight className="w-4 h-4 " />
                 )}{" "}
-                Continue
+                {t("continue")}
               </Button>
             </div>
           </form>

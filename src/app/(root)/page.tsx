@@ -3,6 +3,7 @@ import IconBoxes from "@/components/icon-boxes";
 import { ProductCarousel } from "@/components/shared/product/product-carousel";
 import ProductList from "@/components/shared/product/product-list";
 import ViewAllProductsButton from "@/components/view-all-products";
+import { getServerTranslations } from "@/i18n/server";
 import {
   getFeaturedProducts,
   getLatetProducts,
@@ -11,6 +12,7 @@ import {
 const Homepage = async () => {
   const latestProducts = await getLatetProducts();
   const featuredProducts = await getFeaturedProducts();
+  const { t } = await getServerTranslations();
 
   return (
     <div>
@@ -18,7 +20,7 @@ const Homepage = async () => {
         <ProductCarousel data={featuredProducts} />
       )}
 
-      <ProductList title="Newest Arrivals" data={latestProducts} />
+      <ProductList title={t("newestArrivals")} data={latestProducts} />
 
       <ViewAllProductsButton />
 

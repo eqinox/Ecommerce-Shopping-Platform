@@ -10,12 +10,15 @@ import { getMyCart } from "@/lib/actions/cart.actions";
 import { auth } from "@/auth";
 import ReviewList from "./review-list";
 import Rating from "@/components/shared/product/rating";
+import { getServerTranslations } from "@/i18n/server";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 const ProductDetailsPage: React.FC<Props> = async (props) => {
+  const { t } = await getServerTranslations("product");
+  const { t: commonT } = await getServerTranslations();
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -45,7 +48,9 @@ const ProductDetailsPage: React.FC<Props> = async (props) => {
               <h1 className="h3-bold">{product.name}</h1>
 
               <Rating value={Number(product.rating)} />
-              <p>{product.numReviews} reviews</p>
+              <p>
+                {product.numReviews} {commonT("reviews")}
+              </p>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <ProductPrice
@@ -54,7 +59,7 @@ const ProductDetailsPage: React.FC<Props> = async (props) => {
                 />
               </div>
               <div className="mt-10">
-                <p className="font-semibold">Description</p>
+                <p className="font-semibold">{t("description")}</p>
                 <p>{product.description}</p>
               </div>
             </div>
@@ -64,17 +69,19 @@ const ProductDetailsPage: React.FC<Props> = async (props) => {
             <Card>
               <CardContent className="p-4">
                 <div className="mb-2 flex justify-between">
-                  <div>Price</div>
+                  <div>{commonT("price")}</div>
                   <div>
                     <ProductPrice value={Number(product.price)} />
                   </div>
                 </div>
                 <div className="mb-2 flex justify-between">
-                  <div>Status</div>
+                  <div>{commonT("status")}</div>
                   {product.stock > 0 ? (
-                    <Badge variant="outline">In Stock</Badge>
+                    <Badge variant="outline">{commonT("inStock")}</Badge>
                   ) : (
-                    <Badge variant="destructive">Out Of Stock</Badge>
+                    <Badge variant="destructive">
+                      {commonT("notFound.stock")}
+                    </Badge>
                   )}
                 </div>
                 {product.stock > 0 && (
@@ -98,7 +105,7 @@ const ProductDetailsPage: React.FC<Props> = async (props) => {
         </div>
       </section>
       <section className="mt-10">
-        <h2 className="h2-bold  mb-5">Customer Reviews</h2>
+        <h2 className="h2-bold  mb-5">{t("customerReviews")}</h2>
         <ReviewList
           productId={product.id}
           productSlug={product.slug}

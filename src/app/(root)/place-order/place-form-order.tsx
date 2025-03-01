@@ -5,8 +5,10 @@ import { createOrder } from "@/lib/actions/order.actions";
 import { Check, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
+import { useTranslation } from "react-i18next";
 
 const PlaceOrderForm = () => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const PlaceOrderButton = () => {
@@ -18,7 +20,7 @@ const PlaceOrderForm = () => {
         ) : (
           <Check className="w-4 h-4" />
         )}{" "}
-        Place Order
+        {t("placeOrder")}
       </Button>
     );
   };

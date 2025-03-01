@@ -5,12 +5,14 @@ import ProductPrice from "./product-price";
 import { Product } from "@/types";
 import Rating from "./rating";
 import ProductCardLink from "./product-card-link";
+import { getServerTranslations } from "@/i18n/server";
 
 interface ProductCardProps {
   product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = async ({ product }) => {
+  const { t } = await getServerTranslations();
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="p-0 items-center">
@@ -26,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.stock > 0 ? (
             <ProductPrice value={Number(product.price)} />
           ) : (
-            <p className="text-destructive">Out Of Stock</p>
+            <p className="text-destructive">{t("notFound.stock")}</p>
           )}
         </div>
       </CardContent>

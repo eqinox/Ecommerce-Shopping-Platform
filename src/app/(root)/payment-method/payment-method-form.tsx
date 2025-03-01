@@ -16,9 +16,11 @@ import { DEFAULT_PAYMENT_METHOD, PAYMENT_METHODS } from "@/lib/constants";
 import { paymentMethodSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Loader } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 interface Props {
@@ -26,6 +28,7 @@ interface Props {
 }
 
 const PaymentMethodForm: React.FC<Props> = ({ preferredPaymentMethod }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -57,9 +60,9 @@ const PaymentMethodForm: React.FC<Props> = ({ preferredPaymentMethod }) => {
   return (
     <div>
       <div className="max-w-md mx-auto space-y-4">
-        <h1 className="h2-bold mt-4">Payment Method</h1>
+        <h1 className="h2-bold mt-4">{t("payment.method")}</h1>
         <p className="text-sm text-muted-foreground">
-          Please select a payment method
+          {t("payment.selectMethod")}
         </p>
         <Form {...form}>
           <form
@@ -89,6 +92,30 @@ const PaymentMethodForm: React.FC<Props> = ({ preferredPaymentMethod }) => {
                                 checked={field.value === paymentMethod}
                               />
                             </FormControl>
+                            {paymentMethod === "Paypal" && (
+                              <Image
+                                src={"/images/paypal.png"}
+                                alt="Paypal"
+                                width={16}
+                                height={16}
+                              />
+                            )}
+                            {paymentMethod === "Карта" && (
+                              <Image
+                                src={"/images/card.webp"}
+                                alt="Card"
+                                width={16}
+                                height={16}
+                              />
+                            )}
+                            {paymentMethod === "Плащане при доставка" && (
+                              <Image
+                                src={"/images/cod.png"}
+                                alt="Cash On Delivery"
+                                width={16}
+                                height={16}
+                              />
+                            )}
                             <FormLabel className="font-normal">
                               {paymentMethod}
                             </FormLabel>
@@ -109,7 +136,7 @@ const PaymentMethodForm: React.FC<Props> = ({ preferredPaymentMethod }) => {
                 ) : (
                   <ArrowRight className="w-4 h-4 " />
                 )}{" "}
-                Continue
+                {t("continue")}
               </Button>
             </div>
           </form>

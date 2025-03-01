@@ -7,18 +7,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getServerTranslations } from "@/i18n/server";
 import { signOutUser } from "@/lib/actions/user.actions";
 import { UserIcon } from "lucide-react";
 import Link from "next/link";
 
 const UserButton = async () => {
+  const { t } = await getServerTranslations();
   const session = await auth();
 
   if (!session) {
     return (
       <Button asChild>
         <Link href="/sign-in">
-          <UserIcon /> Sign In
+          <UserIcon /> {t("signIn")}
         </Link>
       </Button>
     );
@@ -53,20 +55,20 @@ const UserButton = async () => {
 
           <DropdownMenuItem>
             <Link href="/user/profile" className="w-full">
-              User Profile
+              {t("userProfile")}
             </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem>
             <Link href="/user/orders" className="w-full">
-              Order History
+              {t("orderHistory")}
             </Link>
           </DropdownMenuItem>
 
           {session?.user?.role === "admin" && (
             <DropdownMenuItem>
               <Link href="/admin/overview" className="w-full">
-                Admin
+                {t("admin")}
               </Link>
             </DropdownMenuItem>
           )}
@@ -77,7 +79,7 @@ const UserButton = async () => {
                 className="w-full py-4 px-2 h-4 justify-start"
                 variant="ghost"
               >
-                Sign Out
+                {t("signOut")}
               </Button>
             </form>
           </DropdownMenuItem>

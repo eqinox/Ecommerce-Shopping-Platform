@@ -10,8 +10,10 @@ import { getAllCategories } from "@/lib/actions/product.actions";
 import { Button } from "@/components/ui/button";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
+import { getServerTranslations } from "@/i18n/server";
 
 const CategoriesDrawer = async () => {
+  const { t } = await getServerTranslations();
   const categories = await getAllCategories();
 
   return (
@@ -23,7 +25,7 @@ const CategoriesDrawer = async () => {
       </DrawerTrigger>
       <DrawerContent className="h-full max-w-sm">
         <DrawerHeader>
-          <DrawerTitle>Select a category</DrawerTitle>
+          <DrawerTitle>{t("selectCategory")}</DrawerTitle>
           <div className="space-y-1">
             {categories.map((x) => (
               <Button

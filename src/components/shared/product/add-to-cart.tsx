@@ -8,6 +8,7 @@ import { Cart, CartItem } from "@/types";
 import { Loader, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   item: CartItem;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const AddToCart: React.FC<Props> = ({ item, cart }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -41,7 +43,7 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
             altText="Go To Cart"
             onClick={() => router.push("/cart")}
           >
-            Go To Cart
+            {t("goToCart")}
           </ToastAction>
         ),
       });
@@ -95,7 +97,7 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
       ) : (
         <Plus className="h-4 w-4" />
       )}{" "}
-      Add To Cart
+      {t("addToCart")}
     </Button>
   );
 };

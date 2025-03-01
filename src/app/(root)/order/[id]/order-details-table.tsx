@@ -29,6 +29,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import StripePayment from "./stripe-payment";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   order: Omit<Order, "paymentResult">;
@@ -45,6 +46,7 @@ const OrderDetailsTable: React.FC<Props> = ({
 }) => {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const { t: commonT } = useTranslation();
 
   const {
     //id,
@@ -62,12 +64,13 @@ const OrderDetailsTable: React.FC<Props> = ({
   } = order;
 
   const PrintLoadingState = () => {
+    const { t } = useTranslation();
     const [{ isPending }] = usePayPalScriptReducer();
 
     let status = "";
 
     if (isPending) {
-      status = "Loading PayPal...";
+      status = t("loadingPaypal");
     } else {
       status = "Error Loading PayPal";
     }
@@ -139,25 +142,27 @@ const OrderDetailsTable: React.FC<Props> = ({
 
   return (
     <div>
-      <h1 className="py-4 text-2xl">Order {formatId(order.id)}</h1>
+      <h1 className="py-4 text-2xl">
+        {commonT("order")} {formatId(order.id)}
+      </h1>
       <div className="grid md:grid-cols-3 md:gap-5">
         <div className="col-span-2 space-4-y overflow-x-auto">
           <Card>
             <CardContent className="p-4 gap-4">
-              <h2 className="text-xl pb-4">Payment Method</h2>
+              <h2 className="text-xl pb-4">{commonT("payment.method")}</h2>
               <p className="mb-2">{paymentMethod}</p>
               {isPaid ? (
                 <Badge variant="secondary">
-                  Paid at {formatDateTime(paidAt!).dateTime}
+                  {commonT("paidAt")} {formatDateTime(paidAt!).dateTime}
                 </Badge>
               ) : (
-                <Badge variant="destructive">Not paid</Badge>
+                <Badge variant="destructive">{commonT("notPaid")}</Badge>
               )}
             </CardContent>
           </Card>
           <Card className="my-2">
             <CardContent className="p-4 gap-4">
-              <h2 className="text-xl pb-4">Shipping Address</h2>
+              <h2 className="text-xl pb-4">{commonT("shippingAddress")}</h2>
               <p className="mb-2">{shippingAddress.fullName}</p>
               <p>
                 {shippingAddress.streetAddress}, {shippingAddress.city}
@@ -165,22 +170,23 @@ const OrderDetailsTable: React.FC<Props> = ({
               </p>
               {isDelivered ? (
                 <Badge variant="secondary">
-                  Delivered at {formatDateTime(deliveredAt!).dateTime}
+                  {commonT("deliveredAt")}{" "}
+                  {formatDateTime(deliveredAt!).dateTime}
                 </Badge>
               ) : (
-                <Badge variant="destructive">Not Delivered</Badge>
+                <Badge variant="destructive">{commonT("notDelivered")}</Badge>
               )}
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 gap-4">
-              <h2 className="text-xl pb-4">Order Items</h2>
+              <h2 className="text-xl pb-4">{commonT("orderItems")}</h2>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Item</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
+                    <TableHead>{commonT("item")}</TableHead>
+                    <TableHead>{commonT("quantity")}</TableHead>
+                    <TableHead>{commonT("price")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -203,7 +209,9 @@ const OrderDetailsTable: React.FC<Props> = ({
                       <TableCell>
                         <span className="px-2">{item.qty}</span>
                       </TableCell>
-                      <TableCell>${item.price}</TableCell>
+                      <TableCell>
+                        {item.price} {commonT("currency")}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -214,22 +222,22 @@ const OrderDetailsTable: React.FC<Props> = ({
         <Card>
           <CardContent className="p-4 gap-4 space-y-4">
             <div className="flex justify-between">
-              <div>Items</div>
+              <div>{commonT("items")}</div>
               <div>{formatCurrency(itemsPrice)}</div>
             </div>
 
             <div className="flex justify-between">
-              <div>Tax</div>
+              <div>{commonT("tax")}</div>
               <div>{formatCurrency(taxPrice)}</div>
             </div>
 
             <div className="flex justify-between">
-              <div>Shipping</div>
+              <div>{commonT("shipping")}</div>
               <div>{formatCurrency(shippingPrice)}</div>
             </div>
 
             <div className="flex justify-between">
-              <div>Total</div>
+              <div>{commonT("total")}</div>
               <div>{formatCurrency(totalPrice)}</div>
             </div>
             {/* PayPal Payment */}

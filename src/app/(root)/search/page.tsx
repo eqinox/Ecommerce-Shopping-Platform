@@ -1,3 +1,6 @@
+import { X, SlidersHorizontal } from "lucide-react";
+import Link from "next/link";
+
 import Pagination from "@/components/shared/pagination";
 import ProductCard from "@/components/shared/product/product-card";
 import { Button } from "@/components/ui/button";
@@ -5,8 +8,7 @@ import {
   getAllCategories,
   getAllProducts,
 } from "@/lib/actions/product.actions";
-import Link from "next/link";
-import { X } from "lucide-react";
+import { getServerTranslations } from "@/i18n/server";
 
 export async function generateMetadata(props: {
   searchParams: Promise<{
@@ -43,32 +45,7 @@ export async function generateMetadata(props: {
   }
 }
 
-const prices = [
-  {
-    name: "$1 to $50",
-    value: "1-50",
-  },
-  {
-    name: "$51 to $100",
-    value: "51-100",
-  },
-  {
-    name: "$101 to $200",
-    value: "101-200",
-  },
-  {
-    name: "$201 to $500",
-    value: "201-500",
-  },
-  {
-    name: "$501 to $1000",
-    value: "501-1000",
-  },
-];
-
 const ratings = [4, 3, 2, 1];
-
-const sortOrders = ["newest", "lowest", "highest", "rating"];
 
 const SearchPage = async (props: {
   searchParams: Promise<{
@@ -80,6 +57,8 @@ const SearchPage = async (props: {
     page?: string;
   }>;
 }) => {
+  const { t } = await getServerTranslations("search");
+  const { t: commonT } = await getServerTranslations();
   const {
     q = "all",
     category = "all",
@@ -88,6 +67,48 @@ const SearchPage = async (props: {
     sort = "newest",
     page = "1",
   } = await props.searchParams;
+
+  const prices = [
+    {
+      name: t("prices.1"),
+      value: "1-50",
+    },
+    {
+      name: t("prices.2"),
+      value: "51-100",
+    },
+    {
+      name: t("prices.3"),
+      value: "101-200",
+    },
+    {
+      name: t("prices.4"),
+      value: "201-500",
+    },
+    {
+      name: t("prices.5"),
+      value: "501-1000",
+    },
+  ];
+
+  const sortOrders = [
+    {
+      value: "newest",
+      label: t("sort.newest"),
+    },
+    {
+      value: "lowest",
+      label: t("sort.lowest"),
+    },
+    {
+      value: "highest",
+      label: t("sort.highest"),
+    },
+    {
+      value: "rating",
+      label: t("sort.rating"),
+    },
+  ];
 
   // Construct filter url
   const getFilterUrl = ({
@@ -126,7 +147,9 @@ const SearchPage = async (props: {
     <div className="grid md:grid-cols-5 md:gap-5">
       <div className="filter-links">
         {/* Category Links */}
-        <div className="text-xl mt-3 mb-2">Department</div>
+        <div className="text-xl mt-3 mb-2 flex gap-2">
+          <SlidersHorizontal /> {t("department")}
+        </div>
         <div>
           <ul className="space-y-1">
             <li>
@@ -136,7 +159,7 @@ const SearchPage = async (props: {
                 }`}
                 href={getFilterUrl({ c: "all" })}
               >
-                Any
+                {t("any")}
               </Link>
             </li>
             {categories.map((x) => (
@@ -153,14 +176,14 @@ const SearchPage = async (props: {
         </div>
         {/* Price Links */}
         <div>
-          <div className="text-xl mt-8 mb-2">Price</div>
+          <div className="text-xl mt-8 mb-2">{commonT("price")}</div>
           <ul className="space-y-1">
             <li>
               <Link
                 className={`  ${"all" === price && "font-bold"}`}
                 href={getFilterUrl({ p: "all" })}
               >
-                Any
+                {t("any")}
               </Link>
             </li>
             {prices.map((p) => (
@@ -177,14 +200,14 @@ const SearchPage = async (props: {
         </div>
         {/* Rating Links */}
         <div>
-          <div className="text-xl mt-8 mb-2">Customer Review</div>
+          <div className="text-xl mt-8 mb-2">{t("customerReview")}</div>
           <ul className="space-y-1">
             <li>
               <Link
                 href={getFilterUrl({ r: "all" })}
                 className={`  ${"all" === rating && "font-bold"}`}
               >
-                Any
+                {t("any")}
               </Link>
             </li>
             {ratings.map((r) => (
@@ -193,7 +216,7 @@ const SearchPage = async (props: {
                   href={getFilterUrl({ r: `${r}` })}
                   className={`${r.toString() === rating && "font-bold"}`}
                 >
-                  {`${r} stars & up`}
+                  {`${r} ${t("starsAndUp")}`}
                 </Link>
               </li>
             ))}
@@ -207,7 +230,7 @@ const SearchPage = async (props: {
             {q !== "all" && q !== "" && "Query : " + q}
             {category !== "all" &&
               category !== "" &&
-              "   Category : " + category}
+              `   ${t("category")} : ` + category}
             {price !== "all" && "    Price: " + price}
             {rating !== "all" && "    Rating: " + rating + " & up"}
             &nbsp;
@@ -217,26 +240,28 @@ const SearchPage = async (props: {
             price !== "all" ? (
               <Button variant={"link"} asChild>
                 <Link href="/search">
-                  Clear <X />
+                  {t("clear")} <X />
                 </Link>
               </Button>
             ) : null}
           </div>
           <div>
-            Sort by{" "}
+            {t("sortBy")}{" "}
             {sortOrders.map((s) => (
               <Link
-                key={s}
-                className={`mx-2   ${sort == s && "font-bold"} `}
-                href={getFilterUrl({ s })}
+                key={s.value}
+                className={`mx-2   ${sort == s.value && "font-bold"} `}
+                href={getFilterUrl({ s: s.value })}
               >
-                {s}
+                {s.label}
               </Link>
             ))}
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {products!.data.length === 0 && <div>No product found</div>}
+          {products!.data.length === 0 && (
+            <div>{commonT("notFound.products")}</div>
+          )}
           {products!.data.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

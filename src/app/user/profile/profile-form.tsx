@@ -15,9 +15,12 @@ import { updateProfileSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 const ProfileForm = () => {
+  const { t } = useTranslation();
+  const { t: formT } = useTranslation("form");
   const { data: session, update } = useSession();
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
@@ -70,7 +73,7 @@ const ProfileForm = () => {
                 <FormControl>
                   <Input
                     disabled
-                    placeholder="Email"
+                    placeholder={formT("email")}
                     className="input-field"
                     {...field}
                   />
@@ -87,7 +90,7 @@ const ProfileForm = () => {
               <FormItem className="w-full">
                 <FormControl>
                   <Input
-                    placeholder="Name"
+                    placeholder={formT("name")}
                     className="input-field"
                     {...field}
                   />
@@ -103,7 +106,9 @@ const ProfileForm = () => {
           className="button col-span-2 w-full"
           disabled={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting ? "Submitting..." : "Update Profile"}
+          {form.formState.isSubmitting
+            ? `${t("submitting")}`
+            : t("updateProfile")}
         </Button>
       </form>
     </Form>

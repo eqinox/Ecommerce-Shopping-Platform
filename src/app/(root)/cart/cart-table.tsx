@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   cart?: Cart;
@@ -28,13 +29,14 @@ const CartTable: React.FC<Props> = ({ cart }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const { t } = useTranslation();
 
   return (
     <div>
-      <h1 className="py-4 h2-bold">Shopping Cart</h1>
+      <h1 className="py-4 h2-bold">{t("shoppingCart")}</h1>
       {!cart || cart.items.length === 0 ? (
         <div>
-          Cart is empty. <Link href="/">Go Shopping</Link>
+          {t("cartIsEmpty")} <Link href="/">{t("goShopping")}</Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5">
@@ -42,9 +44,9 @@ const CartTable: React.FC<Props> = ({ cart }) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Item</TableHead>
-                  <TableHead className="text-center">Quantity</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
+                  <TableHead>{t("item")}</TableHead>
+                  <TableHead className="text-center">{t("quantity")}</TableHead>
+                  <TableHead className="text-right">{t("price")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -115,7 +117,9 @@ const CartTable: React.FC<Props> = ({ cart }) => {
                         )}
                       </Button>
                     </TableCell>
-                    <TableCell className="text-right">${item.price}</TableCell>
+                    <TableCell className="text-right">
+                      {item.price} {t("currency")}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -125,7 +129,7 @@ const CartTable: React.FC<Props> = ({ cart }) => {
           <Card>
             <CardContent className="p-4 gap-4">
               <div className="pb-3 text-xl">
-                Subtotal ({cart.items.reduce((a, c) => a + c.qty, 0)}):
+                {t("subtotal")} ({cart.items.reduce((a, c) => a + c.qty, 0)}):
                 <span className="font-bold">
                   {formatCurrency(cart.itemsPrice)}
                 </span>
@@ -142,7 +146,7 @@ const CartTable: React.FC<Props> = ({ cart }) => {
                 ) : (
                   <ArrowRight className="w-4 h-4" />
                 )}{" "}
-                Proceed to Checkout
+                {t("proceedToCheckout")}
               </Button>
             </CardContent>
           </Card>

@@ -11,15 +11,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import UserButton from "./user-button";
+import { LanguageSelect } from "@/components/language-select";
+import { getServerTranslations } from "@/i18n/server";
 
-const Menu = () => {
+const Menu = async () => {
+  const { i18n, t } = await getServerTranslations();
   return (
     <div className="flex justify-end gap-3">
       <nav className="hidden md:flex w-full max-w-xs gap-1">
         <ModeToggle />
+        <LanguageSelect currentLanguage={i18n.resolvedLanguage} />
         <Button asChild variant="ghost">
           <Link href="/cart">
-            <ShoppingCart /> Cart
+            <ShoppingCart /> {t("cart")}
           </Link>
         </Button>
         <UserButton />
@@ -30,11 +34,12 @@ const Menu = () => {
             <EllipsisVertical />
           </SheetTrigger>
           <SheetContent className="flex flex-col items-start">
-            <SheetTitle>Menu</SheetTitle>
+            <SheetTitle>{t("menu")}</SheetTitle>
             <ModeToggle />
+            <LanguageSelect currentLanguage={i18n.resolvedLanguage} />
             <Button asChild variant="ghost">
               <Link href="/cart">
-                <ShoppingCart /> Cart
+                <ShoppingCart /> {t("cart")}
               </Link>
             </Button>
 

@@ -7,13 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getServerTranslations } from "@/i18n/server";
 import { getMyOrders } from "@/lib/actions/order.actions";
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "My Orders",
+  title: "Моите Поръчки",
 };
 
 interface Props {
@@ -21,23 +22,24 @@ interface Props {
 }
 
 const OrdersPage: React.FC<Props> = async (props) => {
+  const { t } = await getServerTranslations();
   const { page } = await props.searchParams;
 
   const orders = await getMyOrders({ page: Number(page) || 1 });
 
   return (
     <div className="space-y-2">
-      <h2 className="h2-bold">Orders</h2>
+      <h2 className="h2-bold">{t("orders")}</h2>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>DATE</TableHead>
-              <TableHead>TOTAL</TableHead>
-              <TableHead>PAID</TableHead>
-              <TableHead>DELIVERED</TableHead>
-              <TableHead>ACTIONS</TableHead>
+              <TableHead className="uppercase">{t("id")}</TableHead>
+              <TableHead className="uppercase">{t("date")}</TableHead>
+              <TableHead className="uppercase">{t("total")}</TableHead>
+              <TableHead className="uppercase">{t("paid")}</TableHead>
+              <TableHead className="uppercase">{t("delivered")}</TableHead>
+              <TableHead className="uppercase">{t("actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -51,16 +53,16 @@ const OrdersPage: React.FC<Props> = async (props) => {
                 <TableCell>
                   {order.isPaid && order.paidAt
                     ? formatDateTime(order.paidAt).dateTime
-                    : "Not Paid"}
+                    : t("notPaid")}
                 </TableCell>
                 <TableCell>
                   {order.isDelivered && order.deliveredAt
                     ? formatDateTime(order.deliveredAt).dateTime
-                    : "Not Delivered"}
+                    : t("notDelivered")}
                 </TableCell>
                 <TableCell>
                   <Link href={`/order/${order.id}`}>
-                    <span className="px-2">Details</span>
+                    <span className="px-2">{t("details")}</span>
                   </Link>
                 </TableCell>
               </TableRow>

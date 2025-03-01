@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // Static target date (replace with desired date)
 const TARGET_DATE = new Date("2025-12-20T00:00:00");
@@ -24,6 +25,7 @@ const calculateTimeRemaining = (targetDate: Date) => {
 
 const DealCountdown = () => {
   const [time, setTime] = useState<ReturnType<typeof calculateTimeRemaining>>();
+  const { t } = useTranslation("deal");
 
   useEffect(() => {
     // Calculate initial time remaining on the client
@@ -52,7 +54,7 @@ const DealCountdown = () => {
     return (
       <section className="grid grid-cols-1 md:grid-cols-2 my-20">
         <div className="flex flex-col gap-2 justify-center">
-          <h3 className="text-3xl font-bold">Loading Countdown...</h3>
+          <h3 className="text-3xl font-bold">{t("loadCountdown")}</h3>
         </div>
       </section>
     );
@@ -68,13 +70,11 @@ const DealCountdown = () => {
     return (
       <section className="grid grid-cols-1 md:grid-cols-2 my-20">
         <div className="flex flex-col gap-2 justify-center">
-          <h3 className="text-3xl font-bold">Deal Has Ended</h3>
-          <p>
-            This deal is no longer available. Check out our latest promotions!
-          </p>
+          <h3 className="text-3xl font-bold">{t("endDeal")}</h3>
+          <p>{t("dealNotAvaiable")}</p>
           <div className="text-center">
             <Button asChild>
-              <Link href="/search">View Products</Link>
+              <Link href="/search">{t("viewProducts")}</Link>
             </Button>
           </div>
         </div>
@@ -93,22 +93,17 @@ const DealCountdown = () => {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 my-20">
       <div className="flex flex-col gap-2 justify-center">
-        <h3 className="text-3xl font-bold">Deal Of The Month</h3>
-        <p>
-          Get ready for a shopping experience like never before with our Deals
-          of the Month! Every purchase comes with exclusive perks and offers,
-          making this month a celebration of savvy choices and amazing deals.
-          Don&apos;t miss out! 🎁🛒
-        </p>
+        <h3 className="text-3xl font-bold">{t("dealOfMonth")}</h3>
+        <p>{t("dealMessage")}🎁🛒</p>
         <ul className="grid grid-cols-4">
-          <StatBox label="Days" value={time.days} />
-          <StatBox label="Hours" value={time.hours} />
-          <StatBox label="Minutes" value={time.minutes} />
-          <StatBox label="Seconds" value={time.seconds} />
+          <StatBox label={t("days")} value={time.days} />
+          <StatBox label={t("hours")} value={time.hours} />
+          <StatBox label={t("minutes")} value={time.minutes} />
+          <StatBox label={t("seconds")} value={time.seconds} />
         </ul>
         <div className="text-center">
           <Button asChild>
-            <Link href="/search">View Products</Link>
+            <Link href="/search">{t("viewProducts")}</Link>
           </Button>
         </div>
       </div>

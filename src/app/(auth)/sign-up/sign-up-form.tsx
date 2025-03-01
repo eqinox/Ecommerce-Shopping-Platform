@@ -9,8 +9,10 @@ import { signUpDefaultValues } from "@/lib/constants";
 import { signUpUser } from "@/lib/actions/user.actions";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const SignUpForm = () => {
+  const { t } = useTranslation("form");
   const [data, action, pending] = useActionState(signUpUser, {
     success: false,
     message: "",
@@ -24,7 +26,7 @@ const SignUpForm = () => {
       <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <div className="space-y-6">
         <div>
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">{t("name")}</Label>
           <Input
             id="name"
             name="name"
@@ -35,7 +37,7 @@ const SignUpForm = () => {
         </div>
 
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <Input
             id="email"
             name="email"
@@ -46,7 +48,7 @@ const SignUpForm = () => {
         </div>
 
         <div>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <Input
             id="password"
             name="password"
@@ -57,7 +59,7 @@ const SignUpForm = () => {
         </div>
 
         <div>
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Label htmlFor="confirmPassword">{t("confirmPassword")}</Label>
           <Input
             id="confirmPassword"
             name="confirmPassword"
@@ -69,7 +71,7 @@ const SignUpForm = () => {
 
         <div>
           <Button variant="default" className="w-full" disabled={pending}>
-            {pending ? "Submitting..." : "Sign Up"}
+            {pending ? t("submitting") : t("signUp")}
           </Button>
         </div>
 
@@ -78,9 +80,9 @@ const SignUpForm = () => {
         )}
 
         <div className="text-sm text-center text-muted-foreground">
-          Already have an account?{" "}
+          {t("alreadyHaveAcc")}{" "}
           <Link href="/sign-in" target="_self" className="link">
-            Sign In
+            {t("signIn")}
           </Link>
         </div>
       </div>

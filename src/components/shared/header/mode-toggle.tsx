@@ -13,10 +13,12 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
 
 const ModeToggle = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
@@ -43,27 +45,27 @@ const ModeToggle = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("appearance")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
           checked={theme === "system"}
           onClick={() => setTheme("system")}
         >
-          System
+          {t("system")}
         </DropdownMenuCheckboxItem>
 
         <DropdownMenuCheckboxItem
           checked={theme === "dark"}
           onClick={() => setTheme("dark")}
         >
-          Dark
+          {t("dark")}
         </DropdownMenuCheckboxItem>
 
         <DropdownMenuCheckboxItem
           checked={theme === "light"}
           onClick={() => setTheme("light")}
         >
-          Light
+          {t("light")}
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -9,8 +9,10 @@ import { signInDefaultValues } from "@/lib/constants";
 import { signInWithCredentials } from "@/lib/actions/user.actions";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const CredentialsSignInForm = () => {
+  const { t } = useTranslation("form");
   const [data, action, pending] = useActionState(signInWithCredentials, {
     success: false,
     message: "",
@@ -24,7 +26,7 @@ const CredentialsSignInForm = () => {
       <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <div className="space-y-6">
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <Input
             id="email"
             name="email"
@@ -36,7 +38,7 @@ const CredentialsSignInForm = () => {
         </div>
 
         <div>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <Input
             id="password"
             name="password"
@@ -49,7 +51,7 @@ const CredentialsSignInForm = () => {
 
         <div>
           <Button variant="default" className="w-full" disabled={pending}>
-            {pending ? "Signing In..." : "Sign In"}
+            {pending ? t("signingIn") : t("signIn")}
           </Button>
         </div>
 
@@ -58,9 +60,9 @@ const CredentialsSignInForm = () => {
         )}
 
         <div className="text-sm text-center text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          {t("dontHaveAccount")}{" "}
           <Link href="/sign-up" target="_self" className="link">
-            Sign Up
+            {t("signUp")}
           </Link>
         </div>
       </div>

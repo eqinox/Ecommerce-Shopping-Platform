@@ -12,9 +12,10 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import CredentialsSignInForm from "./credentials-signin-form";
+import { getServerTranslations } from "@/i18n/server";
 
 export const metadata: Metadata = {
-  title: "Sign in",
+  title: "Вход",
 };
 
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const SignInPage: React.FC<Props> = async (props) => {
+  const { t } = await getServerTranslations();
   const { callbackUrl } = await props.searchParams;
   const session = await auth();
 
@@ -42,9 +44,9 @@ const SignInPage: React.FC<Props> = async (props) => {
               priority={true}
             />
           </Link>
-          <CardTitle className="text-center">Sign In</CardTitle>
+          <CardTitle className="text-center">{t("signIn")}</CardTitle>
           <CardDescription className="text-center">
-            Sign in to your account
+            {t("signInInAccount")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

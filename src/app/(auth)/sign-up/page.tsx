@@ -12,9 +12,10 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import SignUpForm from "./sign-up-form";
+import { getServerTranslations } from "@/i18n/server";
 
 export const metadata: Metadata = {
-  title: "Sign Up",
+  title: "Регистрация",
 };
 
 interface Props {
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const SignUpPage: React.FC<Props> = async (props) => {
+  const { t } = await getServerTranslations("form");
   const { callbackUrl } = await props.searchParams;
   const session = await auth();
 
@@ -42,9 +44,9 @@ const SignUpPage: React.FC<Props> = async (props) => {
               priority={true}
             />
           </Link>
-          <CardTitle className="text-center">Create Account</CardTitle>
+          <CardTitle className="text-center">{t("createAccount")}</CardTitle>
           <CardDescription className="text-center">
-            Enter your information below to sign up
+            {t("enterInfo")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
