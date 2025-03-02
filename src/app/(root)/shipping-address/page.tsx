@@ -8,7 +8,7 @@ import { ShippingAddress } from "@/types";
 import CheckoutSteps from "@/components/shared/checkout-steps";
 
 export const metadata: Metadata = {
-  title: "Shipping Address",
+  title: "Адрес За Доставка",
 };
 
 const ShippingAddressPage = async () => {

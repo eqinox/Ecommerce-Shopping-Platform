@@ -6,7 +6,7 @@ import { getOrderById } from "@/lib/actions/order.actions";
 import { Button } from "@/components/ui/button";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 export const metadata: Metadata = {
-  title: "Stripe Payment Success",
+  title: "Успешно Плащане Чрез Карта",
 };
 const SuccessPage = async (props: {
   params: Promise<{ id: string }>;

@@ -2,7 +2,7 @@ import ProductForm from "@/components/admin/product-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Product",
+  title: "Създай Продукт",
 };
 
 const CreateProductPage = () => {

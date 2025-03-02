@@ -16,7 +16,7 @@ import Link from "next/link";
 import Charts from "./charts";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
+  title: "Администраторско Табло",
 };
 
 const AdminOverviewPage = async () => {

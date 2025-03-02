@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import UpdateUserForm from "./update-user-form";
 
 export const metadata: Metadata = {
-  title: "Update User",
+  title: "Редактирай Потребител",
 };
 
 interface Props {

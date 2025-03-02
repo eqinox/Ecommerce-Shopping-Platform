@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 import Stripe from "stripe";
 
 export const metadata: Metadata = {
-  title: "Order Details",
+  title: "Детайли за Поръчката",
 };
 
 interface Props {
