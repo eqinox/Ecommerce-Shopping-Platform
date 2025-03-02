@@ -24,6 +24,7 @@ import { updateUserSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 interface Props {
@@ -31,6 +32,7 @@ interface Props {
 }
 
 const UpdateUserForm: React.FC<Props> = ({ user }) => {
+  const { t } = useTranslation("form");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -72,10 +74,10 @@ const UpdateUserForm: React.FC<Props> = ({ user }) => {
             name="email"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t("form")}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter user email"
+                    placeholder={t("enterEmail")}
                     {...field}
                     disabled={true}
                   />
@@ -92,9 +94,9 @@ const UpdateUserForm: React.FC<Props> = ({ user }) => {
             name="name"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t("name")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter user name" {...field} />
+                  <Input placeholder={t("user.enterName")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,14 +110,14 @@ const UpdateUserForm: React.FC<Props> = ({ user }) => {
             name="role"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Role</FormLabel>
+                <FormLabel>{t("user.role")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value.toString()}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a role" />
+                      <SelectValue placeholder={t("user.selectRole")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -138,7 +140,9 @@ const UpdateUserForm: React.FC<Props> = ({ user }) => {
             className="w-full"
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting ? "Submitting..." : "Update User"}
+            {form.formState.isSubmitting
+              ? `{${t("submitting")}...`
+              : t("updateUser")}
           </Button>
         </div>
       </form>

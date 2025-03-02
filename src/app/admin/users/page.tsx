@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getServerTranslations } from "@/i18n/server";
 import { deleteUser, getAllUsers } from "@/lib/actions/user.actions";
 import { formatId } from "@/lib/utils";
 import { Metadata } from "next";
@@ -24,19 +25,20 @@ interface Props {
 }
 
 const AdminUserPage: React.FC<Props> = async (props) => {
+  const { t } = await getServerTranslations();
   const { page = 1, query: searchText } = await props.searchParams;
   const users = await getAllUsers({ page: Number(page), query: searchText });
 
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-3">
-        <h2 className="h2-bold">Users</h2>
+        <h2 className="h2-bold">{t("users")}</h2>
         {searchText && (
           <div>
-            Filtered by <i>&quot;{searchText}&quot;</i>{" "}
+            {t("filteredBy")} <i>&quot;{searchText}&quot;</i>{" "}
             <Link href="/admin/users">
               <Button variant="outline" size="sm">
-                Remove Filter
+                {t("removeFilter")}
               </Button>
             </Link>
           </div>
@@ -46,11 +48,11 @@ const AdminUserPage: React.FC<Props> = async (props) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>NAME</TableHead>
-              <TableHead>EMAIL</TableHead>
-              <TableHead>ROLE</TableHead>
-              <TableHead>ACTIONS</TableHead>
+              <TableHead className="uppercase">{t("id")}</TableHead>
+              <TableHead className="uppercase">{t("name")}</TableHead>
+              <TableHead className="uppercase">{t("email")}</TableHead>
+              <TableHead className="uppercase">{t("role")}</TableHead>
+              <TableHead className="uppercase">{t("actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -61,14 +63,14 @@ const AdminUserPage: React.FC<Props> = async (props) => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   {user.role === "user" ? (
-                    <Badge variant="secondary">User</Badge>
+                    <Badge variant="secondary">{t("user")}</Badge>
                   ) : (
-                    <Badge variant="default">Admin</Badge>
+                    <Badge variant="default">{t("admin")}</Badge>
                   )}
                 </TableCell>
                 <TableCell>
                   <Button asChild variant="outline" size="sm">
-                    <Link href={`/admin/users/${user.id}`}>Edit</Link>
+                    <Link href={`/admin/users/${user.id}`}>{t("edit")}</Link>
                   </Button>
                   <DeleteDialog id={user.id} action={deleteUser} />
                 </TableCell>

@@ -18,6 +18,7 @@
   "submitting": "Submitting",
   "name": "Name",
   "email": "Email",
+  "enterEmail": "Enter user email",
   "password": "Password",
   "confirmPassword": "Confirm Password",
   "signingIn": "Signing In...",
@@ -26,5 +27,26 @@
   "signUp": "Sign Up",
   "createAccount": "Create Account",
   "enterInfo": "Enter your information below to sign up",
-  "alreadyHaveAcc": "Already have an account?"
+  "alreadyHaveAcc": "Already have an account?",
+  "product": {
+    "enterName": "Enter product name",
+    "slug": "Slug",
+    "enterSlug": "Enter slug",
+    "brand": "Brand",
+    "enterBrand": "Enter brand",
+    "price": "Price",
+    "enterPrice": "Enter price",
+    "stock": "Stock",
+    "enterStock": "Enter stock",
+    "images": "Images",
+    "featuredProduct": "Featured Product",
+    "isFeatured": "is Featured?",
+    "enterDescription": "Enter product description"
+  },
+  "user": {
+    "enterName": "Enter user name",
+    "role": "Role",
+    "selectRole": "Select a role"
+  },
+  "updateUser": "Update User"
 }

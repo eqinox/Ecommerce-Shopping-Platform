@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getServerTranslations } from "@/i18n/server";
 import { deleteOrder, getAllOrders } from "@/lib/actions/order.actions";
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import { Metadata } from "next";
@@ -24,6 +25,7 @@ interface Props {
 }
 
 const AdminOrdersPage: React.FC<Props> = async (props) => {
+  const { t } = await getServerTranslations();
   const { page = "1", query: searchText } = await props.searchParams;
 
   const session = await auth();
@@ -38,13 +40,13 @@ const AdminOrdersPage: React.FC<Props> = async (props) => {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-3">
-        <h1 className="h2-bold">Orders</h1>
+        <h1 className="h2-bold">{t("orders")}</h1>
         {searchText && (
           <div>
-            Filtered by <i>&quot;{searchText}&quot;</i>{" "}
+            {t("filteredBy")} <i>&quot;{searchText}&quot;</i>{" "}
             <Link href="/admin/orders">
               <Button variant="outline" size="sm">
-                Remove Filter
+                {t("removeFilter")}
               </Button>
             </Link>
           </div>
@@ -54,13 +56,13 @@ const AdminOrdersPage: React.FC<Props> = async (props) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>DATE</TableHead>
-              <TableHead>BUYER</TableHead>
-              <TableHead>TOTAL</TableHead>
-              <TableHead>PAID</TableHead>
-              <TableHead>DELIVERED</TableHead>
-              <TableHead>ACTIONS</TableHead>
+              <TableHead>{t("id")}</TableHead>
+              <TableHead className="uppercase">{t("date")}</TableHead>
+              <TableHead className="uppercase">{t("buyer")}</TableHead>
+              <TableHead className="uppercase">{t("total")}</TableHead>
+              <TableHead className="uppercase">{t("paid")}</TableHead>
+              <TableHead className="uppercase">{t("delivered")}</TableHead>
+              <TableHead className="uppercase">{t("actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -75,16 +77,16 @@ const AdminOrdersPage: React.FC<Props> = async (props) => {
                 <TableCell>
                   {order.isPaid && order.paidAt
                     ? formatDateTime(order.paidAt).dateTime
-                    : "Not Paid"}
+                    : t("notPaid")}
                 </TableCell>
                 <TableCell>
                   {order.isDelivered && order.deliveredAt
                     ? formatDateTime(order.deliveredAt).dateTime
-                    : "Not Delivered"}
+                    : t("notDelivered")}
                 </TableCell>
                 <TableCell>
                   <Button asChild variant="outline" size="sm">
-                    <Link href={`/order/${order.id}`}>Details</Link>
+                    <Link href={`/order/${order.id}`}>{t("details")}</Link>
                   </Button>
                   <DeleteDialog id={order.id} action={deleteOrder} />
                 </TableCell>

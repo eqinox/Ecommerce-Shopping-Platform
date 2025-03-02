@@ -14,12 +14,14 @@ import { BadgeDollarSign, Barcode, CreditCard, Users } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import Charts from "./charts";
+import { getServerTranslations } from "@/i18n/server";
 
 export const metadata: Metadata = {
   title: "Администраторско Табло",
 };
 
 const AdminOverviewPage = async () => {
+  const { t } = await getServerTranslations();
   const session = await auth();
 
   if (session?.user.role !== "admin") throw new Error("User is not authorized");
@@ -28,11 +30,13 @@ const AdminOverviewPage = async () => {
 
   return (
     <div className="space-y-2">
-      <h1 className="h2-bold">Dashboard</h1>
+      <h1 className="h2-bold">{t("dashboard")}</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("totalRevenue")}
+            </CardTitle>
             <BadgeDollarSign />
           </CardHeader>
           <CardContent>
@@ -46,7 +50,9 @@ const AdminOverviewPage = async () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("totalSales")}
+            </CardTitle>
             <CreditCard />
           </CardHeader>
           <CardContent>
@@ -58,7 +64,9 @@ const AdminOverviewPage = async () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("customers")}
+            </CardTitle>
             <Users />
           </CardHeader>
           <CardContent>
@@ -70,7 +78,9 @@ const AdminOverviewPage = async () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Products</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("products")}
+            </CardTitle>
             <Barcode />
           </CardHeader>
           <CardContent>
@@ -83,7 +93,7 @@ const AdminOverviewPage = async () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
+            <CardTitle>{t("overview")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Charts
@@ -96,16 +106,16 @@ const AdminOverviewPage = async () => {
 
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
+            <CardTitle>{t("recentSales")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>BUYER</TableHead>
-                  <TableHead>DATE</TableHead>
-                  <TableHead>TOTAL</TableHead>
-                  <TableHead>ACTIONS</TableHead>
+                  <TableHead className="uppercase">{t("buyer")}</TableHead>
+                  <TableHead className="uppercase">{t("date")}</TableHead>
+                  <TableHead className="uppercase">{t("total")}</TableHead>
+                  <TableHead className="uppercase">{t("actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -120,7 +130,7 @@ const AdminOverviewPage = async () => {
                     <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
                     <TableCell>
                       <Link href={`/order/${order.id}`}>
-                        <span className="px-2">Details</span>
+                        <span className="px-2">{t("details")}</span>
                       </Link>
                     </TableCell>
                   </TableRow>

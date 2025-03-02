@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   id: string;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const DeleteDialog: React.FC<Props> = ({ id, action }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -46,25 +48,25 @@ const DeleteDialog: React.FC<Props> = ({ id, action }) => {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="destructive" className="ml-2">
-          Delete
+          {t("delete")}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>{t("deleteDialog.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cant be undone
+            {t("deleteDialog.description")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
           <Button
             variant="destructive"
             size="sm"
             disabled={isPending}
             onClick={handleDeleteClick}
           >
-            {isPending ? "Deleting..." : "Delete"}
+            {isPending ? `${t("deleting")}...` : t("delete")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

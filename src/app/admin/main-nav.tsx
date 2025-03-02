@@ -4,31 +4,34 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-
-const links = [
-  {
-    title: "Overview",
-    href: "/admin/overview",
-  },
-  {
-    title: "Products",
-    href: "/admin/products",
-  },
-  {
-    title: "Orders",
-    href: "/admin/orders",
-  },
-  {
-    title: "Users",
-    href: "/admin/users",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 const MainNav: React.FC<React.HTMLAttributes<HTMLElement>> = ({
   className,
   ...props
 }) => {
+  const { t } = useTranslation();
   const pathname = usePathname();
+
+  const links = [
+    {
+      title: t("overview"),
+      href: "/admin/overview",
+    },
+    {
+      title: t("products"),
+      href: "/admin/products",
+    },
+    {
+      title: t("orders"),
+      href: "/admin/orders",
+    },
+    {
+      title: t("users"),
+      href: "/admin/users",
+    },
+  ];
+
   return (
     <nav
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}

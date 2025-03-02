@@ -25,6 +25,7 @@ import { UploadButton } from "@/lib/uploadthing";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   type: "Create" | "Update";
@@ -33,6 +34,8 @@ interface Props {
 }
 
 const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
+  const { t: commonT } = useTranslation();
+  const { t: formT } = useTranslation("form");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -108,9 +111,9 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="name"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{formT("name")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter product name" {...field} />
+                  <Input placeholder={formT("product.enterName")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,10 +125,13 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="slug"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Slug</FormLabel>
+                <FormLabel>{formT("product.slug")}</FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Input placeholder="Enter slug" {...field} />
+                    <Input
+                      placeholder={formT("product.enterSlug")}
+                      {...field}
+                    />
                     <Button
                       type="button"
                       className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 mt-2"
@@ -136,7 +142,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
                         );
                       }}
                     >
-                      Generate
+                      {commonT("generate")}
                     </Button>
                   </div>
                 </FormControl>
@@ -153,9 +159,9 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="category"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Category</FormLabel>
+                <FormLabel>{formT("category")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter category" {...field} />
+                  <Input placeholder={formT("enterCategory")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,9 +174,9 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="brand"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Brand</FormLabel>
+                <FormLabel>{formT("product.brand")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter brand" {...field} />
+                  <Input placeholder={formT("product.enterBrand")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -185,9 +191,9 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="price"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Price</FormLabel>
+                <FormLabel>{formT("product.price")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter price" {...field} />
+                  <Input placeholder={formT("product.enterPrice")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -199,9 +205,9 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="stock"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Stock</FormLabel>
+                <FormLabel>{formT("product.stock")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter stock" {...field} />
+                  <Input placeholder={formT("product.enterStock")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -216,7 +222,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="images"
             render={() => (
               <FormItem className="w-full">
-                <FormLabel>Images</FormLabel>
+                <FormLabel>{formT("images")}</FormLabel>
                 <Card>
                   <CardContent className="space-y-2 mt-2 min-h-48">
                     <div className="flex-start space-x-2">
@@ -256,7 +262,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
 
         <div className="upload-field">
           {/* isFeatured */}
-          Featured Product
+          {formT("featuredProduct")}
           <Card>
             <CardContent className="space-y-2 mt-2">
               <FormField
@@ -270,7 +276,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel>is Featured?</FormLabel>
+                    <FormLabel>{formT("isFeatured")}</FormLabel>
                   </FormItem>
                 )}
               />
@@ -309,11 +315,11 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="description"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Description</FormLabel>
+                <FormLabel>{formT("description")}</FormLabel>
                 <FormControl>
                   <Textarea
                     className="resize-none"
-                    placeholder="Enter product description"
+                    placeholder={formT("product.enterDescription")}
                     {...field}
                   />
                 </FormControl>
@@ -331,7 +337,9 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             disabled={form.formState.isSubmitting}
             className="button col-span-2 w-full"
           >
-            {form.formState.isSubmitting ? "Submitting" : `${type} Product`}
+            {form.formState.isSubmitting
+              ? formT("submitting")
+              : `${type} ${commonT("product")}`}
           </Button>
         </div>
       </form>
