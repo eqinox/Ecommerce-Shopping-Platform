@@ -18,18 +18,18 @@ import { sendPurchaseReceipt, sendShippingReceipt } from "@/email";
 export async function createOrder() {
   try {
     const session = await auth();
-    if (!session) throw new Error("User is not authenticated");
+    if (!session) throw new Error("Потребителят не е удостоверен");
 
     const cart = await getMyCart();
     const userId = session.user?.id;
-    if (!userId) throw new Error("User not found");
+    if (!userId) throw new Error("Потребителят не е намерен");
 
     const user = await getUserById(userId);
 
     if (!cart || cart.items.length === 0) {
       return {
         success: false,
-        message: "Your cart is empty",
+        message: "Вашата количка е празна",
         redirectTo: "/cart",
       };
     }
@@ -37,7 +37,7 @@ export async function createOrder() {
     if (!user.address) {
       return {
         success: false,
-        message: "No shipping address",
+        message: "Няма адрес за доставка",
         redirectTo: "/shipping-address",
       };
     }
@@ -45,7 +45,7 @@ export async function createOrder() {
     if (!user.paymentMethod) {
       return {
         success: false,
-        message: "No payment method",
+        message: "Няма метод на плащане",
         redirectTo: "/payment-method",
       };
     }
@@ -67,7 +67,6 @@ export async function createOrder() {
       const insertedOrder = await tx.order.create({ data: order });
       // Create order items from the cart items
       for (const item of cart.items as CartItem[]) {
-        console.log("ins order", item);
         await tx.orderItem.create({
           data: {
             ...item,
@@ -93,11 +92,11 @@ export async function createOrder() {
       return insertedOrder.id;
     });
 
-    if (!insertedOrderId) throw new Error("Order not created");
+    if (!insertedOrderId) throw new Error("Поръчката не е създадена");
 
     return {
       success: true,
-      message: "Order created",
+      message: "Поръчката е създадена",
       redirectTo: `/order/${insertedOrderId}`,
     };
   } catch (error) {
@@ -149,11 +148,11 @@ export async function createPayPalOrder(orderId: string) {
 
       return {
         success: true,
-        message: "Item order created successfully",
+        message: "Артикулът в поръчката е създаден успешно",
         data: paypalOrder.id,
       };
     } else {
-      throw new Error("Order not found");
+      throw new Error("Поръчката не е намерена");
     }
   } catch (error) {
     return {
@@ -176,7 +175,7 @@ export async function approvePaypalOrder(
       },
     });
 
-    if (!order) throw new Error("Order not found");
+    if (!order) throw new Error("Поръчката не е намерена");
 
     const captureData = await paypal.capturePayment(data.orderID);
 
@@ -185,7 +184,7 @@ export async function approvePaypalOrder(
       captureData.id !== (order.paymentResult as PaymentResult)?.id ||
       captureData.status !== "COMPLETED"
     ) {
-      throw new Error("Error in PayPal payment");
+      throw new Error("Грешка при плащане с PayPal");
     }
 
     // Update order to paid
@@ -204,7 +203,7 @@ export async function approvePaypalOrder(
 
     return {
       success: true,
-      message: "Your order has been paid",
+      message: "Вашата поръчка е платена",
     };
   } catch (error) {
     return {
@@ -232,9 +231,9 @@ export async function updateOrderToPaid({
     },
   });
 
-  if (!order) throw new Error("Order not found");
+  if (!order) throw new Error("Поръчката не е намерена");
 
-  if (order.isPaid) throw new Error("Order is already paid");
+  if (order.isPaid) throw new Error("Поръчката вече е платена");
 
   // Transaction to update order and account for product stock
   await prisma.$transaction(async (tx) => {
@@ -266,7 +265,7 @@ export async function updateOrderToPaid({
     },
   });
 
-  if (!updatedOrder) throw new Error("Order not found");
+  if (!updatedOrder) throw new Error("Поръчката не е намерена");
 
   sendPurchaseReceipt({
     order: {
@@ -286,7 +285,7 @@ export async function getMyOrders({
   page: number;
 }) {
   const session = await auth();
-  if (!session) throw new Error("User is not authorized");
+  if (!session) throw new Error("Потребителят не е удостоверен");
 
   const data = await prisma.order.findMany({
     where: { userId: session.user?.id },
@@ -401,7 +400,7 @@ export async function deleteOrder(id: string) {
 
     return {
       success: true,
-      message: "Order deleted successfully",
+      message: "Поръчката е изтрита успешно",
     };
   } catch (error) {
     return {
@@ -420,7 +419,7 @@ export async function updateOrderToPaidCOD(orderId: string) {
 
     return {
       success: true,
-      message: "Order marked as paid",
+      message: "Поръчката е отбелязана като платена",
     };
   } catch (error) {
     return {
@@ -437,8 +436,8 @@ export async function deliverOrder(orderId: string) {
       where: { id: orderId },
     });
 
-    if (!order) throw new Error("Order not found");
-    if (!order.isPaid) throw new Error("Order is not paid");
+    if (!order) throw new Error("Поръчката не е намерена");
+    if (!order.isPaid) throw new Error("Поръчката не е платена");
 
     await prisma.order.update({
       where: { id: orderId },
@@ -457,7 +456,7 @@ export async function deliverOrder(orderId: string) {
       },
     });
 
-    if (!updatedOrder) throw new Error("Order not found");
+    if (!updatedOrder) throw new Error("Поръчката не е намерена");
 
     sendShippingReceipt({
       order: {
@@ -471,7 +470,7 @@ export async function deliverOrder(orderId: string) {
 
     return {
       success: true,
-      message: "Order has been marked delivered",
+      message: "Поръчката е отбелязана като доставена",
     };
   } catch (error) {
     return {

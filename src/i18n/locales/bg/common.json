@@ -89,7 +89,13 @@
   "cancel": "Отмени",
   "deleting": "Изтриване",
   "deleteDialog": {
-    "title": "Are you absolutely sure?",
-    "description": "This action cant be undone"
-  }
+    "title": "Сигурни ли сте напълно",
+    "description": "Това действие не може да бъде отменено"
+  },
+  "previous": "Предишна",
+  "next": "Следваща",
+  "thanksForPurchase": "Благодарим ви за покупката",
+  "processingOrder": "Обработваме вашата поръчка.",
+  "viewOrder": "Виж поръчката",
+  "stripeCheckout": "Разплащане с карта"
 }

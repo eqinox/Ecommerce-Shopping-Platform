@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { formUrlQuery } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   page: number | string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const Pagination: React.FC<Props> = ({ page, totalPages, urlParamName }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -34,7 +36,7 @@ const Pagination: React.FC<Props> = ({ page, totalPages, urlParamName }) => {
         disabled={Number(page) <= 1}
         onClick={() => handleClick("prev")}
       >
-        Previous
+        {t("previous")}
       </Button>
       <Button
         size="lg"
@@ -43,7 +45,7 @@ const Pagination: React.FC<Props> = ({ page, totalPages, urlParamName }) => {
         disabled={Number(page) >= totalPages}
         onClick={() => handleClick("next")}
       >
-        Next
+        {t("next")}
       </Button>
     </div>
   );

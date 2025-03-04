@@ -102,10 +102,10 @@ export async function getAllProducts({
       sort === "lowest"
         ? { price: "asc" }
         : sort === "highest"
-        ? { price: "desc" }
-        : sort === "rating"
-        ? { rating: "desc" }
-        : { createdAt: "desc" },
+          ? { price: "desc" }
+          : sort === "rating"
+            ? { rating: "desc" }
+            : { createdAt: "desc" },
     skip: (page - 1) * limit,
     take: limit,
   });
@@ -125,7 +125,7 @@ export async function deleteProduct(id: string) {
       where: { id },
     });
 
-    if (!productExists) throw new Error("Product not found");
+    if (!productExists) throw new Error("Продуктът не е намерен");
 
     await prisma.product.delete({ where: { id } });
 
@@ -133,7 +133,7 @@ export async function deleteProduct(id: string) {
 
     return {
       success: true,
-      message: "Product deleted successfully",
+      message: "Продуктът беше изтрит успешно",
     };
   } catch (error) {
     return {
@@ -155,7 +155,7 @@ export async function createProduct(
 
     return {
       success: true,
-      message: "Product created successfully",
+      message: "Продуктът беше създаден успешно",
     };
   } catch (error) {
     return {
@@ -173,7 +173,7 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
       where: { id: product.id },
     });
 
-    if (!productExists) throw new Error("Product not found");
+    if (!productExists) throw new Error("Продуктът не е намерен");
 
     await prisma.product.update({
       where: { id: product.id },
@@ -184,7 +184,7 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
 
     return {
       success: true,
-      message: "Product updated successfully",
+      message: "Продуктът беше редактиран успешно",
     };
   } catch (error) {
     return {

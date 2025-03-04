@@ -89,7 +89,13 @@
   "cancel": "Cancel",
   "deleting": "Deleting",
   "deleteDialog": {
-    "title": "Сигурни ли сте напълно",
-    "description": "Това действие не може да бъде отменено"
-  }
+    "title": "Are you absolutely sure?",
+    "description": "This action cant be undone"
+  },
+  "previous": "Previous",
+  "next": "Next",
+  "thanksForPurchase": "Thanks for your purchase",
+  "processingOrder": "We are now processing your order.",
+  "viewOrder": "View order",
+  "stripeCheckout": "Stripe Checkout"
 }

@@ -31,13 +31,13 @@ export async function signInWithCredentials(
 
     await signIn("credentials", user);
 
-    return { success: true, message: "Signed in successfully" };
+    return { success: true, message: "Успешно влязохте в системата" };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
 
-    return { success: false, message: "Invalid email or password" };
+    return { success: false, message: "Невалиден имейл или парола" };
   }
 }
 
@@ -73,7 +73,7 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
       password: plainPassword,
     });
 
-    return { success: true, message: "User created successfully" };
+    return { success: true, message: "Потребителят беше създаден успешно" };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
@@ -91,7 +91,7 @@ export async function getUserById(userId: string) {
     where: { id: userId },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) throw new Error("Потребителят не е намерен");
   return user;
 }
 
@@ -104,7 +104,7 @@ export async function updateUserAddress(data: ShippingAddress) {
       where: { id: session?.user?.id },
     });
 
-    if (!currentUser) throw new Error("User not found");
+    if (!currentUser) throw new Error("Потребителят не е намерен");
 
     const address = shippingAddressChema.parse(data);
 
@@ -115,7 +115,7 @@ export async function updateUserAddress(data: ShippingAddress) {
 
     return {
       success: true,
-      message: "User updated successfully",
+      message: "Потребителят беше редактиран успешно",
     };
   } catch (error) {
     return {
@@ -135,7 +135,7 @@ export async function updateUserPaymentMethod(
       where: { id: session?.user?.id },
     });
 
-    if (!currentUser) throw new Error("User not found");
+    if (!currentUser) throw new Error("Потребителят не е намерен");
 
     const paymentMethod = paymentMethodSchema.parse(data);
 
@@ -146,7 +146,7 @@ export async function updateUserPaymentMethod(
 
     return {
       success: true,
-      message: "User updated successfully",
+      message: "Потребителят беше редактиран успешно",
     };
   } catch (error) {
     return {
@@ -165,7 +165,7 @@ export async function updateProfile(user: { name: string; email: string }) {
       where: { id: session?.user?.id },
     });
 
-    if (!currentUser) throw new Error("User not found");
+    if (!currentUser) throw new Error("Потребителят не е намерен");
 
     await prisma.user.update({
       where: { id: currentUser.id },
@@ -174,7 +174,7 @@ export async function updateProfile(user: { name: string; email: string }) {
 
     return {
       success: true,
-      message: "User updated successfully",
+      message: "Потребителят беше редактиран успешно",
     };
   } catch (error) {
     return {
@@ -230,7 +230,7 @@ export async function deleteUser(id: string) {
 
     return {
       success: true,
-      message: "User deleted successfully",
+      message: "Потребителят беше изтрит успешно",
     };
   } catch (error) {
     return {
@@ -255,7 +255,7 @@ export async function updateUser(user: z.infer<typeof updateUserSchema>) {
 
     return {
       success: true,
-      message: "User updated successfully",
+      message: "Потребителят беше редактиран успешно",
     };
   } catch (error) {
     return {

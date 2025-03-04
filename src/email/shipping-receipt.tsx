@@ -69,23 +69,23 @@ export default function ShippingRecepitEmail({
 }: ShippingRecepitEmailProps) {
   return (
     <Html>
-      <Preview>View Shipped Order</Preview>
+      <Preview>Преглед на изпратената поръчка</Preview>
       <Tailwind>
         <Head />
         <Body className="font-sans bg-white">
           <Container className="max-w-xl">
-            <Heading>Shipping Receipt</Heading>
+            <Heading>Разписка за доставка</Heading>
             <Section>
               <Row>
                 <Column>
                   <Text className="mb-0 text-gray-500 whitespace-nowrap text-nowrap mr-4">
-                    Order ID
+                    Номер на поръчката
                   </Text>
                   <Text className="mt-0 mr-4">{order.id.toString()}</Text>
                 </Column>
                 <Column>
                   <Text className="mb-0 text-gray-500 whitespace-nowrap text-nowrap mr-4">
-                    Shipped on
+                    Изпратено на
                   </Text>
                   <Text className="mt-0 mr-4">
                     {dateFormatter.format(order.deliveredAt!)}

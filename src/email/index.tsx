@@ -10,7 +10,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: Order }) => {
   await resend.emails.send({
     from: `${APP_NAME} <${SENDER_EMAIL}>`,
     to: order.user.email,
-    subject: `Order Confirmation ${order.id}`,
+    subject: `Потвърждение на поръчката`,
     react: <PurchaseReceiptEmail order={order} />,
   });
 };
@@ -19,7 +19,7 @@ export const sendShippingReceipt = async ({ order }: { order: Order }) => {
   await resend.emails.send({
     from: `${APP_NAME} <${SENDER_EMAIL}>`,
     to: order.user.email,
-    subject: `Your Order Has Been Shipped!`,
+    subject: `Вашата поръчка беще изпратена`,
     react: <ShippingRecepitEmail order={order} />,
   });
 };

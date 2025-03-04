@@ -68,23 +68,23 @@ const dateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium" });
 export default function PurchaseReceiptEmail({ order }: OrderInformationProps) {
   return (
     <Html>
-      <Preview>View order receipt</Preview>
+      <Preview>Преглед на разписката за поръчката</Preview>
       <Tailwind>
         <Head />
         <Body className="font-sans bg-white">
           <Container className="max-w-xl">
-            <Heading>Purchase Receipt</Heading>
+            <Heading>Касова бележка за покупката</Heading>
             <Section>
               <Row>
                 <Column>
                   <Text className="mb-0 text-gray-500 whitespace-nowrap text-nowrap mr-4">
-                    Order ID
+                    Номер на поръчката
                   </Text>
                   <Text className="mt-0 mr-4">{order.id.toString()}</Text>
                 </Column>
                 <Column>
                   <Text className="mb-0 text-gray-500 whitespace-nowrap text-nowrap mr-4">
-                    Purchased On
+                    Закупено на
                   </Text>
                   <Text className="mt-0 mr-4">
                     {dateFormatter.format(order.createdAt)}
@@ -92,7 +92,7 @@ export default function PurchaseReceiptEmail({ order }: OrderInformationProps) {
                 </Column>
                 <Column>
                   <Text className="mb-0 text-gray-500 whitespace-nowrap text-nowrap mr-4">
-                    Price Paid
+                    Платена цена
                   </Text>
                   <Text className="mt-0 mr-4">
                     {formatCurrency(order.totalPrice)}
@@ -126,10 +126,10 @@ export default function PurchaseReceiptEmail({ order }: OrderInformationProps) {
                 </Row>
               ))}
               {[
-                { name: "Items", price: order.itemsPrice },
-                { name: "Tax", price: order.taxPrice },
-                { name: "Shipping", price: order.shippingPrice },
-                { name: "Total", price: order.totalPrice },
+                { name: "Артикули", price: order.itemsPrice },
+                { name: "Данък", price: order.taxPrice },
+                { name: "Доставка", price: order.shippingPrice },
+                { name: "Общо", price: order.totalPrice },
               ].map(({ name, price }) => (
                 <Row key={name} className="py-1">
                   <Column align="right">{name}:</Column>

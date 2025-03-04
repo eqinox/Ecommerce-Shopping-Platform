@@ -34,7 +34,7 @@ export function formatError(error: any): string {
   ) {
     // Handle Prisma error
     const field = error.meta?.target ? error.meta.target[0] : "Field";
-    return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+    return `${field.charAt(0).toUpperCase() + field.slice(1)} Вече съществува`;
   } else {
     // Handle other errors
     return typeof error.message === "string"
@@ -50,7 +50,7 @@ export const round2 = (value: number | string) => {
   } else if (typeof value === "string") {
     return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
   } else {
-    throw new Error("value is not a number nor a string");
+    throw new Error("Стойността не е нито число, нито низ");
   }
 };
 

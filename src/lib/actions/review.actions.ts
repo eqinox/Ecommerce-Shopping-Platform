@@ -13,7 +13,7 @@ export async function createUpdateReview(
 ) {
   try {
     const session = await auth();
-    if (!session) throw new Error("User is not authenticated");
+    if (!session) throw new Error("Потребителят не е удостоверен");
 
     // Validate and store review data and userId
     const review = insertReviewSchema.parse({
@@ -26,7 +26,7 @@ export async function createUpdateReview(
       where: { id: review.productId },
     });
 
-    if (!product) throw new Error("Product not found");
+    if (!product) throw new Error("Продуктът не е намерен");
 
     // Check if user has already reviewed this product
     const reviewExists = await prisma.review.findFirst({
@@ -78,7 +78,7 @@ export async function createUpdateReview(
 
     return {
       success: true,
-      message: "Review updated successfully",
+      message: "Отзивът беше актуализиран успешно",
     };
   } catch (error) {
     return {
@@ -114,7 +114,7 @@ export const getReviewByProductId = async ({
   productId: string;
 }) => {
   const session = await auth();
-  if (!session) throw new Error("User is not authenticated");
+  if (!session) throw new Error("Потребителят не е удостоверен");
 
   return await prisma.review.findFirst({
     where: { productId, userId: session?.user.id },

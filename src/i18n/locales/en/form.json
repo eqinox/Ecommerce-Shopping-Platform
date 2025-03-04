@@ -14,6 +14,7 @@
   "enterTitle": "Enter title",
   "description": "Description",
   "enterDescription": "Enter description",
+  "enterCategory": "Enter category",
   "submit": "Submit",
   "submitting": "Submitting",
   "name": "Name",
@@ -28,6 +29,8 @@
   "createAccount": "Create Account",
   "enterInfo": "Enter your information below to sign up",
   "alreadyHaveAcc": "Already have an account?",
+  "create": "Create",
+  "edit": "Edit",
   "product": {
     "enterName": "Enter product name",
     "slug": "Slug",

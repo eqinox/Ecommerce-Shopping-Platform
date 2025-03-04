@@ -222,7 +222,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
             name="images"
             render={() => (
               <FormItem className="w-full">
-                <FormLabel>{formT("images")}</FormLabel>
+                <FormLabel>{formT("product.images")}</FormLabel>
                 <Card>
                   <CardContent className="space-y-2 mt-2 min-h-48">
                     <div className="flex-start space-x-2">
@@ -262,7 +262,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
 
         <div className="upload-field">
           {/* isFeatured */}
-          {formT("featuredProduct")}
+          {formT("product.featuredProduct")}
           <Card>
             <CardContent className="space-y-2 mt-2">
               <FormField
@@ -276,7 +276,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel>{formT("isFeatured")}</FormLabel>
+                    <FormLabel>{formT("product.isFeatured")}</FormLabel>
                   </FormItem>
                 )}
               />
@@ -339,7 +339,7 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
           >
             {form.formState.isSubmitting
               ? formT("submitting")
-              : `${type} ${commonT("product")}`}
+              : `${type === "Create" ? formT("create") : formT("edit")} ${commonT("product")}`}
           </Button>
         </div>
       </form>
