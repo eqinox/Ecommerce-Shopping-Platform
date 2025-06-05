@@ -7,7 +7,7 @@ import { getMyCart } from "./cart.actions";
 import { getUserById } from "./user.actions";
 import { insertOrderSchema } from "../validators";
 import { prisma } from "@/db/prisma";
-import { CartItem, PaymentResult, ShippingAddress } from "@/types";
+import { AllSizes, CartItem, PaymentResult, ShippingAddress } from "@/types";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
@@ -70,7 +70,6 @@ export async function createOrder() {
         await tx.orderItem.create({
           data: {
             ...item,
-
             price: item.price,
             orderId: insertedOrder.id,
           },
@@ -114,7 +113,19 @@ export async function getOrderById(orderId: string) {
     },
   });
 
-  return convertToPlainObject(data);
+  if (!data) return null;
+
+  const order = convertToPlainObject(data);
+
+  return {
+    ...order,
+    shippingAddress: order.shippingAddress as ShippingAddress,
+    paymentResult: order.paymentResult as PaymentResult,
+    orderitems: order.orderitems.map((item) => ({
+      ...item,
+      size: item.size as AllSizes,
+    })),
+  };
 }
 
 // Create new paypal order
@@ -256,7 +267,6 @@ export async function updateOrderToPaid({
     });
   });
 
-  // Get updated order after transaction
   const updatedOrder = await prisma.order.findFirst({
     where: { id: orderId },
     include: {
@@ -267,9 +277,15 @@ export async function updateOrderToPaid({
 
   if (!updatedOrder) throw new Error("Поръчката не е намерена");
 
-  sendPurchaseReceipt({
+  const sanitizedOrderItems = updatedOrder.orderitems.map((item) => ({
+    ...item,
+    size: item.size as AllSizes, // 👈 Cast the string to union type
+  }));
+
+  await sendPurchaseReceipt({
     order: {
       ...updatedOrder,
+      orderitems: sanitizedOrderItems,
       shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
       paymentResult: updatedOrder.paymentResult as PaymentResult,
     },
@@ -458,9 +474,15 @@ export async function deliverOrder(orderId: string) {
 
     if (!updatedOrder) throw new Error("Поръчката не е намерена");
 
+    const sanitizedOrderItems = updatedOrder.orderitems.map((item) => ({
+      ...item,
+      size: item.size as AllSizes, // 👈 Cast the string to union type
+    }));
+
     sendShippingReceipt({
       order: {
         ...updatedOrder,
+        orderitems: sanitizedOrderItems,
         shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
         paymentResult: updatedOrder.paymentResult as PaymentResult,
       },

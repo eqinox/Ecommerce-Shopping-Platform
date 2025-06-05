@@ -1,6 +1,6 @@
 "use server";
 
-import { CartItem } from "@/types";
+import { CartItem, ProductSize } from "@/types";
 import { cookies } from "next/headers";
 import { convertToPlainObject, formatError, round2 } from "../utils";
 import { auth } from "@/auth";
@@ -28,6 +28,106 @@ const calcPrice = (items: z.infer<typeof cartItemSchema>[]) => {
 
 export async function addItemToCart(data: CartItem) {
   try {
+    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    if (!sessionCartId) throw new Error("Сесията на количката не е намерена");
+
+    const session = await auth();
+    const userId = session?.user?.id ? (session.user.id as string) : undefined;
+
+    const cart = await getMyCart();
+    const item = cartItemSchema.parse(data);
+
+    const product = await prisma.product.findFirst({
+      where: { id: item.productId },
+    });
+    if (!product) throw new Error("Продуктът не е намерен");
+
+    // Parse sizes from JSON
+    const sizes = product.sizes as ProductSize[];
+    const selectedSize = sizes.find((s) => s.size === item.size);
+    if (!selectedSize || selectedSize.quantity < 1) {
+      throw new Error("Няма наличност от избрания размер");
+    }
+
+    if (!cart) {
+      // Decrease stock and selected size quantity
+      await prisma.product.update({
+        where: { id: product.id },
+        data: {
+          stock: product.stock - 1,
+          sizes: sizes.map((s) =>
+            s.size === item.size ? { ...s, quantity: s.quantity - 1 } : s
+          ),
+        },
+      });
+
+      const newCart = insertCartSchema.parse({
+        userId,
+        items: [item],
+        sessionCartId,
+        ...calcPrice([item]),
+      });
+
+      await prisma.cart.create({ data: newCart });
+    } else {
+      const existItem = (cart.items as CartItem[]).find(
+        (x) => x.productId === item.productId && x.size === item.size
+      );
+
+      if (existItem) {
+        if (product.stock < existItem.qty + 1 || selectedSize.quantity < 1) {
+          throw new Error("Недостатъчна наличност");
+        }
+
+        existItem.qty += 1;
+      } else {
+        if (product.stock < 1) throw new Error("Недостатъчна наличност");
+
+        cart.items.push(item);
+      }
+
+      // Decrease stock and size quantity
+      await prisma.product.update({
+        where: { id: product.id },
+        data: {
+          stock: product.stock - 1,
+          sizes: sizes.map((s) =>
+            s.size === item.size ? { ...s, quantity: s.quantity - 1 } : s
+          ),
+        },
+      });
+
+      await prisma.cart.update({
+        where: { id: cart.id },
+        data: {
+          items: cart.items as Prisma.CartUpdateitemsInput[],
+          ...calcPrice(cart.items as CartItem[]),
+        },
+      });
+    }
+
+    revalidatePath(`/product/${product.slug}`);
+
+    return {
+      success: true,
+      message: `${product.name} ${
+        cart
+          ? cart.items.length > 1
+            ? "актуализирано в"
+            : "добавено в"
+          : "добавено в"
+      } количката`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
+
+export async function addItemToCart2(data: CartItem) {
+  try {
     // Check for cart cookie
     const sessionCartId = (await cookies()).get("sessionCartId")?.value;
 
@@ -41,7 +141,6 @@ export async function addItemToCart(data: CartItem) {
 
     // Get cart
     const cart = await getMyCart();
-
     // Parse and validate item
     const item = cartItemSchema.parse(data);
 
@@ -76,8 +175,11 @@ export async function addItemToCart(data: CartItem) {
       };
     } else {
       // Check if item is already in cart
+      // const existItem = (cart.items as CartItem[]).find(
+      //   (x) => x.productId === item.productId
+      // );
       const existItem = (cart.items as CartItem[]).find(
-        (x) => x.productId === item.productId
+        (x) => x.productId === item.productId && x.size === item.size
       );
 
       if (existItem) {
@@ -86,16 +188,10 @@ export async function addItemToCart(data: CartItem) {
           throw new Error("Недостатъчна наличност");
         }
 
-        // Increate the quantity
-        (cart.items as CartItem[]).find(
-          (x) => x.productId === item.productId
-        )!.qty = existItem.qty + 1;
+        existItem.qty += 1;
       } else {
-        // If item does not exist in cart
-        // Check stock
         if (product.stock < 1) throw new Error("Недостатъчна наличност");
 
-        // Add item to the cart.items
         cart.items.push(item);
       }
 
@@ -155,42 +251,49 @@ export async function getMyCart() {
   });
 }
 
-export async function removeItemFromCart(productId: string) {
+export async function removeItemFromCart(productId: string, size: string) {
   try {
-    // Check for cart cookie
     const sessionCartId = (await cookies()).get("sessionCartId")?.value;
-
     if (!sessionCartId) throw new Error("Сесията на количката не е намерена");
 
-    // Get Product
     const product = await prisma.product.findFirst({
       where: { id: productId },
     });
     if (!product) throw new Error("Продуктът не е намерен");
 
-    // Get user cart
     const cart = await getMyCart();
     if (!cart) throw new Error("Количката не е намерена");
 
-    // Check for item
     const exist = (cart.items as CartItem[]).find(
-      (x) => x.productId === productId
+      (x) => x.productId === productId && x.size === size
     );
     if (!exist) throw new Error("Артикулът не е намерен");
 
-    // Check if only one in qty
+    // Increase product stock and size quantity
+    const sizes = product.sizes as ProductSize[];
+    const updatedSizes = sizes.map((s) =>
+      s.size === size ? { ...s, quantity: s.quantity + 1 } : s
+    );
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        stock: product.stock + 1,
+        sizes: updatedSizes,
+      },
+    });
+
+    // Update cart
     if (exist.qty === 1) {
-      // Remove from cart
       cart.items = (cart.items as CartItem[]).filter(
-        (x) => x.productId !== exist.productId
+        (x) => !(x.productId === productId && x.size === size)
       );
     } else {
-      // Decrease qty
-      (cart.items as CartItem[]).find((x) => x.productId === productId)!.qty =
-        exist.qty - 1;
+      (cart.items as CartItem[]).find(
+        (x) => x.productId === productId && x.size === size
+      )!.qty -= 1;
     }
 
-    // Update cart in database
     await prisma.cart.update({
       where: { id: cart.id },
       data: {
@@ -203,7 +306,56 @@ export async function removeItemFromCart(productId: string) {
 
     return {
       success: true,
-      message: `${product.name} беше премахнат от количната`,
+      message: `${product.name} (${size}) беше премахнат от количката`,
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+
+export async function removeItemFromCart2(productId: string, size: string) {
+  try {
+    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    if (!sessionCartId) throw new Error("Сесията на количката не е намерена");
+
+    const product = await prisma.product.findFirst({
+      where: { id: productId },
+    });
+    if (!product) throw new Error("Продуктът не е намерен");
+
+    const cart = await getMyCart();
+    if (!cart) throw new Error("Количката не е намерена");
+
+    const exist = (cart.items as CartItem[]).find(
+      (x) => x.productId === productId && x.size === size
+    );
+    if (!exist) throw new Error("Артикулът не е намерен");
+
+    if (exist.qty === 1) {
+      // Remove item completely
+      cart.items = (cart.items as CartItem[]).filter(
+        (x) => !(x.productId === productId && x.size === size)
+      );
+    } else {
+      // Decrease quantity by 1
+      (cart.items as CartItem[]).find(
+        (x) => x.productId === productId && x.size === size
+      )!.qty -= 1;
+    }
+
+    await prisma.cart.update({
+      where: { id: cart.id },
+      data: {
+        items: cart.items as Prisma.CartUpdateitemsInput[],
+        ...calcPrice(cart.items as CartItem[]),
+      },
+    });
+
+    revalidatePath(`/product/${product.slug}`);
+
+    return {
+      success: true,
+      message: `${product.name} (${size}) беше премахнат от количката`,
     };
   } catch (error) {
     return { success: false, message: formatError(error) };

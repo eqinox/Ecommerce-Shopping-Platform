@@ -4,7 +4,11 @@ import { convertToPlainObject, formatError } from "../utils";
 import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from "../constants";
 import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
-import { insertProductsSchema, updateProductSchema } from "../validators";
+import {
+  insertProductsSchema,
+  productSizeSchema,
+  updateProductSchema,
+} from "../validators";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 
@@ -15,7 +19,12 @@ export async function getLatetProducts() {
     orderBy: { createdAt: "desc" },
   });
 
-  return convertToPlainObject(data);
+  const parsedData = data.map((product) => ({
+    ...product,
+    sizes: z.array(productSizeSchema).parse(product.sizes),
+  }));
+
+  return convertToPlainObject(parsedData);
 }
 
 // Get single product by it's slug
@@ -148,7 +157,14 @@ export async function createProduct(
   data: z.infer<typeof insertProductsSchema>
 ) {
   try {
+    let totalStock = 0;
+    data.sizes.forEach((size) => {
+      totalStock += size.quantity;
+    });
+
+    data.stock = totalStock;
     const product = insertProductsSchema.parse(data);
+
     await prisma.product.create({ data: product });
 
     revalidatePath("/admin/products");
@@ -212,5 +228,10 @@ export async function getFeaturedProducts() {
     take: 4,
   });
 
-  return convertToPlainObject(data);
+  const parsedData = data.map((product) => ({
+    ...product,
+    sizes: z.array(productSizeSchema).parse(product.sizes),
+  }));
+
+  return convertToPlainObject(parsedData);
 }

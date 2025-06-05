@@ -1,16 +1,14 @@
-import { getServerTranslations } from "@/i18n/server";
+"use client";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface ProductPriceProps {
   value: number;
   className?: string;
 }
 
-const ProductPrice: React.FC<ProductPriceProps> = async ({
-  value,
-  className,
-}) => {
-  const { t } = await getServerTranslations();
+const ProductPrice: React.FC<ProductPriceProps> = ({ value, className }) => {
+  const { t } = useTranslation();
   // Ensure two decimal places
   const stringValue = value.toFixed(2);
   // Get the int/float

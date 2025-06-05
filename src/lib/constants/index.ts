@@ -1,3 +1,5 @@
+import { ProductSize } from "@/types";
+
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Prostore";
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION ||
@@ -47,6 +49,15 @@ export const productDefaultValues = {
   numReviews: "0",
   isDeatured: false,
   banned: null,
+  sizes: [
+    { size: "XS", quantity: 0 },
+    { size: "S", quantity: 0 },
+    { size: "M", quantity: 0 },
+    { size: "L", quantity: 0 },
+    { size: "XL", quantity: 0 },
+    { size: "XXL", quantity: 0 },
+    { size: "XXXL", quantity: 0 },
+  ] as ProductSize[],
 };
 
 export const USER_ROLES = process.env.USER_ROLES

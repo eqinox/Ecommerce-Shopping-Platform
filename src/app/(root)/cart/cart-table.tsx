@@ -50,8 +50,8 @@ const CartTable: React.FC<Props> = ({ cart }) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {cart.items.map((item) => (
-                  <TableRow key={item.slug}>
+                {cart.items.map((item, index) => (
+                  <TableRow key={index}>
                     <TableCell>
                       <Link
                         href={`/product/${item.slug}`}
@@ -63,7 +63,9 @@ const CartTable: React.FC<Props> = ({ cart }) => {
                           width={50}
                           height={50}
                         />
-                        <span className="px-2">{item.name}</span>
+                        <span className="px-2">
+                          {item.name}. Размер: {item.size}
+                        </span>
                       </Link>
                     </TableCell>
                     <TableCell className="flex-center gap-2">
@@ -74,7 +76,8 @@ const CartTable: React.FC<Props> = ({ cart }) => {
                         onClick={() =>
                           startTransition(async () => {
                             const res = await removeItemFromCart(
-                              item.productId
+                              item.productId,
+                              item.size
                             );
 
                             if (!res.success) {

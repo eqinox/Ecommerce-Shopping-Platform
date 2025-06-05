@@ -1,5 +1,13 @@
 import { hashSync } from "bcrypt-ts-edge";
 
+const sizes = [
+  { size: "S", quantity: 2 },
+  { size: "M", quantity: 3 },
+  { size: "L", quantity: 0 },
+  { size: "XL", quantity: 0 },
+  { size: "XXL", quantity: 0 },
+  { size: "XXXL", quantity: 0 },
+];
 const sampleData = {
   users: [
     {
@@ -32,6 +40,7 @@ const sampleData = {
       stock: 5,
       isFeatured: false,
       banner: "banner-1.jpg",
+      sizes,
     },
     {
       name: "Brooks Brothers Long Sleeved Shirt",
@@ -49,6 +58,7 @@ const sampleData = {
       stock: 10,
       isFeatured: false,
       banner: "banner-2.jpg",
+      sizes,
     },
     {
       name: "Tommy Hilfiger Classic Fit Dress Shirt",
@@ -66,6 +76,7 @@ const sampleData = {
       stock: 0,
       isFeatured: false,
       banner: null,
+      sizes,
     },
     {
       name: "Calvin Klein Slim Fit Stretch Shirt",
@@ -83,6 +94,7 @@ const sampleData = {
       stock: 10,
       isFeatured: false,
       banner: null,
+      sizes,
     },
     {
       name: "Polo Ralph Lauren Oxford Shirt",
@@ -100,6 +112,7 @@ const sampleData = {
       stock: 6,
       isFeatured: false,
       banner: null,
+      sizes,
     },
     {
       name: "Polo Classic Pink Hoodie",
@@ -117,6 +130,7 @@ const sampleData = {
       stock: 8,
       isFeatured: false,
       banner: null,
+      sizes,
     },
   ],
 };

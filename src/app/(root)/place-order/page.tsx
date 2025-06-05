@@ -87,8 +87,8 @@ const PlaceOrderPage = async () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cart.items.map((item) => (
-                    <TableRow key={item.slug}>
+                  {cart.items.map((item, index) => (
+                    <TableRow key={index}>
                       <TableCell>
                         <Link
                           href={`/product/${item.slug}`}
@@ -100,7 +100,9 @@ const PlaceOrderPage = async () => {
                             width={50}
                             height={50}
                           />
-                          <span className="px-2">{item.name}</span>
+                          <span className="px-2">
+                            {item.name}. Размер: {item.size}
+                          </span>
                         </Link>
                       </TableCell>
                       <TableCell>

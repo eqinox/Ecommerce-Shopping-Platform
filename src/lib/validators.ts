@@ -2,6 +2,15 @@ import { z } from "zod";
 
 import { formatNumberWithDecimal } from "./utils";
 import { PAYMENT_METHODS } from "./constants";
+export const AllSizesSchema = z.enum([
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "XXXL",
+]);
 
 const currency = z
   .string()
@@ -9,6 +18,12 @@ const currency = z
     (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))),
     "Цената трябва да има точно два знака след десетичната запетая"
   );
+
+// Schema for product sizes
+export const productSizeSchema = z.object({
+  size: AllSizesSchema,
+  quantity: z.number().int().min(0),
+});
 
 // Schema for inserting products
 export const insertProductsSchema = z.object({
@@ -24,6 +39,7 @@ export const insertProductsSchema = z.object({
   isFeatured: z.boolean().optional(),
   banner: z.string().optional().nullable(),
   price: currency,
+  sizes: z.array(productSizeSchema),
 });
 
 // Schema for updating products
@@ -63,6 +79,7 @@ export const cartItemSchema = z.object({
     .nonnegative("Наличността трябва да е положително число"),
   image: z.string().min(1, "Снимката е задължителна"),
   price: currency,
+  size: AllSizesSchema,
 });
 
 export const insertCartSchema = z.object({
@@ -118,6 +135,7 @@ export const insertOrderItemSchema = z.object({
   name: z.string(),
   price: currency,
   qty: z.number(),
+  size: AllSizesSchema,
 });
 
 export const paymentResultSchema = z.object({

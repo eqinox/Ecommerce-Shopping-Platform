@@ -190,8 +190,8 @@ const OrderDetailsTable: React.FC<Props> = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {orderitems.map((item) => (
-                    <TableRow key={item.slug}>
+                  {orderitems.map((item, index) => (
+                    <TableRow key={index}>
                       <TableCell>
                         <Link
                           href={`/product/${item.slug}`}

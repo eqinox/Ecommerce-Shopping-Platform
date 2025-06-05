@@ -2,7 +2,11 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { productDefaultValues } from "@/lib/constants";
-import { insertProductsSchema, updateProductSchema } from "@/lib/validators";
+import {
+  AllSizesSchema,
+  insertProductsSchema,
+  updateProductSchema,
+} from "@/lib/validators";
 import { Product } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -36,8 +40,10 @@ interface Props {
 const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
   const { t: commonT } = useTranslation();
   const { t: formT } = useTranslation("form");
+  const { t: productT } = useTranslation("product");
   const router = useRouter();
   const { toast } = useToast();
+  const sizeOptions = AllSizesSchema.options;
 
   const form = useForm<z.infer<typeof insertProductsSchema>>({
     resolver:
@@ -199,20 +205,49 @@ const ProductForm: React.FC<Props> = ({ type, product, productId }) => {
               </FormItem>
             )}
           />
-          {/* Stock */}
-          <FormField
-            control={form.control}
-            name="stock"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>{formT("product.stock")}</FormLabel>
-                <FormControl>
-                  <Input placeholder={formT("product.enterStock")} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        </div>
+
+        <div className="w-full flex flex-col">
+          <p>{productT("sizes")}</p>
+          <div className="w-full flex flex-row flex-nowrap">
+            {sizeOptions.map((size) => {
+              const currentQty =
+                form.watch("sizes")?.find((s) => s.size === size)?.quantity ??
+                "";
+
+              return (
+                <FormItem
+                  key={size}
+                  className="flex flex-col items-center text-center gap-1 pr-2 pt-2 w-20"
+                >
+                  <FormLabel className="w-12">{size}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      value={currentQty}
+                      min={0}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        const quantity =
+                          raw === "" ? "" : Math.max(0, parseInt(raw, 10) || 0);
+                        const current = form.getValues("sizes");
+                        const updated = current.filter(
+                          (item) => item.size !== size
+                        );
+
+                        // Add only if non-empty or already present
+                        if (quantity !== "") {
+                          updated.push({ size, quantity });
+                        }
+
+                        form.setValue("sizes", updated);
+                      }}
+                    />
+                  </FormControl>
+                </FormItem>
+              );
+            })}
+          </div>
         </div>
 
         <div className="upload-field flex flex-col gap-5 md:flex-row">

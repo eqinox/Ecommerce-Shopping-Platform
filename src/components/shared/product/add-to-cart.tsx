@@ -52,7 +52,7 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
 
   const handleRemoveFromCart = async () => {
     startTransition(async () => {
-      const res = await removeItemFromCart(item.productId);
+      const res = await removeItemFromCart(item.productId, item.size);
 
       toast({
         variant: res.success ? "default" : "destructive",
@@ -64,8 +64,17 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
   };
 
   // Ceck if item is in cart
-  const existItem =
-    cart && cart.items.find((x) => x.productId === item.productId);
+  // const existItem =
+  //   cart && cart.items.find((x) => x.productId === item.productId);
+  let existItem;
+  let totalQuantity: number = 0;
+
+  cart?.items.forEach((x) => {
+    existItem = x;
+    if (x.productId === item.productId) {
+      totalQuantity += x.qty;
+    }
+  });
 
   return existItem ? (
     <div>
@@ -76,7 +85,7 @@ const AddToCart: React.FC<Props> = ({ item, cart }) => {
           <Minus className="h-4 w-4" />
         )}
       </Button>
-      <span className="px-2">{existItem.qty}</span>
+      <span className="px-2">{totalQuantity}</span>
       <Button type="button" variant="outline" onClick={handleAddToCart}>
         {isPending ? (
           <Loader className="w-4 h-4 animate-spin" />
