@@ -6,11 +6,11 @@ import ViewAllProductsButton from "@/components/view-all-products";
 import { getServerTranslations } from "@/i18n/server";
 import {
   getFeaturedProducts,
-  getLatetProducts,
+  getLatestProducts,
 } from "@/lib/actions/product.actions";
 
 const Homepage = async () => {
-  const latestProducts = await getLatetProducts();
+  const latestProducts = await getLatestProducts();
   const featuredProducts = await getFeaturedProducts();
   const { t } = await getServerTranslations();
 

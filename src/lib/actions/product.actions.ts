@@ -1,6 +1,11 @@
 "use server";
 
-import { convertToPlainObject, formatError } from "../utils";
+import {
+  convertToPlainObject,
+  formatError,
+  parseProductSizes,
+  parseProductsWithSizes,
+} from "../utils";
 import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from "../constants";
 import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
@@ -13,27 +18,26 @@ import { z } from "zod";
 import { Prisma } from "@prisma/client";
 
 // Get latest products
-export async function getLatetProducts() {
+export async function getLatestProducts() {
   const data = await prisma.product.findMany({
     take: LATEST_PRODUCTS_LIMIT,
     orderBy: { createdAt: "desc" },
   });
 
-  const parsedData = data.map((product) => ({
-    ...product,
-    sizes: z.array(productSizeSchema).parse(product.sizes),
-  }));
+  const parsedData = parseProductsWithSizes(data);
 
   return convertToPlainObject(parsedData);
 }
 
 // Get single product by it's slug
 export async function getProductBySlug(slug: string) {
-  return await prisma.product.findFirst({
-    where: {
-      slug: slug,
-    },
+  const product = await prisma.product.findFirst({
+    where: { slug },
   });
+
+  if (!product) return null;
+
+  return parseProductSizes(product);
 }
 
 // Get single product by it's slug
@@ -44,7 +48,9 @@ export async function getProductById(productId: string) {
     },
   });
 
-  return convertToPlainObject(data);
+  if (!data) return null;
+
+  return convertToPlainObject(parseProductSizes(data));
 }
 
 // Get all products
@@ -119,10 +125,7 @@ export async function getAllProducts({
     take: limit,
   });
 
-  const parsedData = data.map((product) => ({
-    ...product,
-    sizes: z.array(productSizeSchema).parse(product.sizes),
-  }));
+  const parsedData = parseProductsWithSizes(data);
 
   const dataCount = await prisma.product.count();
 

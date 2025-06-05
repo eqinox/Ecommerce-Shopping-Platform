@@ -1,6 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import qs from "query-string";
+import { z } from "zod";
+import { productSizeSchema } from "./validators";
+import { ProductSize } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -143,4 +146,25 @@ export function formUrlQuery({
     },
     { skipNull: true }
   );
+}
+
+// Use Zod array parsing to validate/transform sizes
+const parseSizes = (sizes: unknown): ProductSize[] =>
+  z.array(productSizeSchema).parse(sizes);
+
+// Parses a single product object
+export function parseProductSizes<T extends { sizes: unknown }>(
+  product: T
+): T & { sizes: ProductSize[] } {
+  return {
+    ...product,
+    sizes: parseSizes(product.sizes),
+  };
+}
+
+// Parses an array of product objects
+export function parseProductsWithSizes<T extends { sizes: unknown }>(
+  products: T[]
+): (T & { sizes: ProductSize[] })[] {
+  return products.map(parseProductSizes);
 }

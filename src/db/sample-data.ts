@@ -1,12 +1,13 @@
+import { ProductSize } from "@/types";
 import { hashSync } from "bcrypt-ts-edge";
 
-const sizes = [
+const sizes: ProductSize[] = [
   { size: "S", quantity: 2 },
   { size: "M", quantity: 3 },
-  { size: "L", quantity: 0 },
-  { size: "XL", quantity: 0 },
-  { size: "XXL", quantity: 0 },
-  { size: "XXXL", quantity: 0 },
+  { size: "L", quantity: 1 },
+  { size: "XL", quantity: 3 },
+  { size: "XXL", quantity: 4 },
+  { size: "XXXL", quantity: 5 },
 ];
 const sampleData = {
   users: [

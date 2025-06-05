@@ -49,6 +49,7 @@ PurchaseReceiptEmail.PreviewProps = {
       qty: x.stock,
       image: x.images[0],
       price: x.price.toString(),
+      size: x.sizes[0].size,
     })),
     isDelivered: true,
     deliveredAt: new Date(),
