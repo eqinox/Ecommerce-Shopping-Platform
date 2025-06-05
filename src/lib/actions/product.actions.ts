@@ -119,10 +119,15 @@ export async function getAllProducts({
     take: limit,
   });
 
+  const parsedData = data.map((product) => ({
+    ...product,
+    sizes: z.array(productSizeSchema).parse(product.sizes),
+  }));
+
   const dataCount = await prisma.product.count();
 
   return {
-    data,
+    data: parsedData,
     totalPages: Math.ceil(dataCount / limit),
   };
 }
